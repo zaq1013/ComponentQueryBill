@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, make_response, redirect, session, flash, send_file, send_from_directory, Response
+from flask import Flask, render_template, request, make_response, redirect, session, flash, send_file, send_from_directory, Response,jsonify
 import pyodbc
 import os
 import shutil
 import json
 import datetime
 import logging
+
 app = Flask(__name__)
 
 app.secret_key = 'pl112004'  # 設定一個安全的密鑰，用於加密session
@@ -104,13 +105,12 @@ def perform_search(agent_code, customer_id, customer_name, machine_number):
     return query_results
 
 @app.route('/search', methods=['GET', 'POST'])
-def search():
+def search(message=''):
     if 'agent_code' not in session:
         return redirect('/login')
 
     query_results = []
     show_result_table = False
-
     if request.method == 'POST':
         agent_code = session['agent_code']
         customer_id = request.form.get('customer_id', '')
@@ -122,9 +122,10 @@ def search():
 
     elif 'agent_code' in session:
         agent_code = session['agent_code']
-        query_results = perform_search(agent_code, '', '', '')  # 这里可以设置默认的查询参数
+        query_results = perform_search(agent_code, '', '', '')  # 設置查詢條件
         show_result_table = True
-
+    if message != '':
+        flash('新增成功')
     return render_template('search.html', query_results=query_results, show_result_table=show_result_table)
 
 def get_machine_file_name(machine_number):
@@ -158,7 +159,7 @@ def get_machine_file_name_ajax(machine_number):
 def link(machine_number):
     # machine_folder_path = os.path.join("", machine_number)
     machine_folder_path = os.path.join("file:\\\\77.0.0.134\\cd_output(mis)\\code", machine_number)
-    # 如果機號資料夾中没有 tabs.css 文件，就將其複製到機號資料夾中
+    # 如果機號資料夾中沒有 tabs.css 文件，就將其複製到機號資料夾中
     # if not os.path.exists(os.path.join(machine_folder_path, 'tabs.css')):
     #     shutil.copy("\\\\77.0.0.134\\cd_output(mis)\\code\\BuildCss\\tabs.css", machine_folder_path)
     
@@ -180,71 +181,122 @@ def link(machine_number):
 
 @app.route('/')
 def root():
-    return redirect('/home')
+    # return redirect('/home')
     return redirect('/login')
 
 @app.route('/confirmation', methods=['GET', 'POST'])
 def confirmation():
     if 'agent_code' not in session:
         return redirect('/login')
+    else:
+        agent = session.get('agent_code')
     if request.method == 'POST':
         selected_data_json = request.form.get('selected_data', '[]')
         selected_data = json.loads(selected_data_json)
-        # 在confirmation.html页面中，您可以使用selected_data来渲染已勾选的数据
-    # print(selected_data)
+        # 在confirmation.hrml頁面中，使用selected_data當作頁面顯示資料的來源
+    print(selected_data)
+    machine_number = selected_data[0]['code']
     return render_template('confirmation.html', selected_data=selected_data)
+
+@app.route('/add_to_cart', methods=['GET', 'POST'])
+def add_to_cart():
+    if 'agent_code' not in session:
+        return redirect('/login')
+    else:
+        agent = session.get('agent_code')
+    if request.method == 'POST':
+        selected_data_json = request.form.get('selected_data', '[]')
+        selected_data = json.loads(selected_data_json)
+    
+    machine_number = selected_data[0]['sbom_code']
+    for i in range(len(selected_data)):
+        if selected_data[i]['sbom_code'] == '':
+            selected_data[i]['sbom_code'] = machine_number
+            selected_data[i]['type'] = '零件包內零件'
+        elif selected_data[i]['sbom_material'] == '':
+            selected_data[i]['type'] = '零件包'
+        else:
+            selected_data[i]['type'] = '一般零件'
+ 
+    cart = session.get('cart')
+    if cart is None:
+        cart = []
+    cart.append(selected_data)
+    print("cart now:",cart)
+    session['cart'] = cart
+
+    # session['notify'] = '新增成功'
+    
+    return search(message='新增成功')
 
 @app.route('/receive_data', methods=['POST'])
 def receive_data():
     if request.method == 'POST':
-            data = request.get_json()  # 獲取前端發送的JSON資料
-            machine_number = data['machine_number']  # 從JSON資料中獲取機號
+            datas = request.get_json()  # 獲取前端發送的JSON資料
+            machine_number = datas['machine_number']  # 從JSON資料中獲取機號
             connection = pyodbc.connect(f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}')
             cursor = connection.cursor()
+            
+            # cursor.execute(f"SELECT TOP 1 {'inq_num'} FROM {'inq_mstr'} ORDER BY {'inq_num'} DESC")
+            # latest_num = cursor.fetchone()
+            # if latest_num:
+            #     # 若已有資料則在舊的編號上+1
+            #     new_num = int(latest_num[0][2:]) + 1
+            # else:
+            #     # 若無主檔資料則設為初始值
+            #     new_num = 1
+            # new_num = f'Q2{new_num:05}'
+            cart = session.get('cart')
 
-            cursor.execute(f"SELECT TOP 1 {'inq_num'} FROM {'inq_mstr'} ORDER BY {'inq_num'} DESC")
-            latest_num = cursor.fetchone()
-            if latest_num:
-                # 若已有資料則在舊的編號上+1
-                new_num = int(latest_num[0][2:]) + 1
-            else:
-                # 若無主檔資料則設為初始值
-                new_num = 1
-            new_num = f'Q2{new_num:05}'
+            if cart is None:
+                cart = []
+            
             query = f"SELECT Xsom_cust FROM Xsom_refMC WHERE Xsom_code = '{machine_number}'"
             cursor.execute(query)
             cust = cursor.fetchone()[0]
             if 'agent_code' in session:
                 agent = session['agent_code']
-            current_datetime = datetime.datetime.now()
-            formatted_date = current_datetime.strftime('%Y-%m-%d')
-            formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+            # current_datetime = datetime.datetime.now()
+            # formatted_date = current_datetime.strftime('%Y-%m-%d')
+            # formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
-            print(data)
-            print(new_num, agent, cust, machine_number, formatted_date, formatted_datetime)
+            # print(agent, cust, machine_number, formatted_date, formatted_datetime)
             # Insert到主檔資料表
-            cursor.execute("INSERT INTO inq_mstr (inq_num, inq_bill, inq_cust, inq_code, inq_createdate, inq_summitdate) VALUES (?, ?, ?, ?, CAST(? AS DATE), CAST(? AS DATETIME))",
-               (new_num, agent, cust, machine_number, formatted_date, formatted_datetime))
+            # cursor.execute("INSERT INTO inq_mstr (inq_num, inq_bill, inq_cust, inq_code, inq_createdate, inq_summitdate) VALUES (?, ?, ?, ?, CAST(? AS DATE), CAST(? AS DATETIME))",
+            #    (new_num, agent, cust, machine_number, formatted_date, formatted_datetime))
             # 遞迴資料內容並逐一插入table
-            for row in data['data']:
-                inq_item = row['項次']
-                inq_comp = row['詢價料號']
-                inq_mach_qty = row['機台用量']
-                if row['機台用量'] in ["","None"]:
-                    inq_mach_qty = None
-                inq_order_qty = row['訂購量']
-                if row['訂購量'] in ["","None"]:
-                    inq_order_qty = None
+            data = datas['data']
+            for i in range(len(data)):
+                inq_item = data[i]['項次']
+                inq_comp = data[i]['詢價料號']
+                inq_mach_qty = data[i]['機台用量']
+                inq_order_qty = data[i]['訂購量']
+                inq_type = data[i]['類型']
+                if data[i]['機台用量'] in ["","None"]:
+                    data[i]['機台用量'] = None
+                if data[i]['訂購量'] in ["","None"]:
+                    data[i]['訂購量'] = None
                 # inq_price = row['詢價金額']
-                inq_type = row['類型']
+                data[i]['機號'] = machine_number
+                data[i]['客戶'] = cust
                 
-                
-                cursor.execute("INSERT INTO inq_det (inq_det_num, inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type, inq_code) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                            (new_num,inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type,machine_number))
-                connection.commit()
-            print('Data submitted successfully')
+                # cursor.execute("INSERT INTO inq_det (inq_det_num, inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type, inq_code) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                #             (new_num,inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type,machine_number))
+                # connection.commit()
+            cart.append(data)
+            print("cart now:",cart)
+            session['cart'] = cart
             return 'Data submitted successfully'
 
+@app.route('/show_cart', methods=['GET', 'POST'])
+def show_cart():
+    cart = session.get('cart')
+    print(cart)
+    data = []
+    for i in cart:
+        for j in i:
+            data.append(j)
+    return render_template('cart.html',cart=cart,data=data)
 
 @app.route('/list_inquiries')
 def list_inquiries():

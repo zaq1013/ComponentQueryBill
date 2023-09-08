@@ -1,0 +1,309 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #212529;
+    color: #fff;
+}
+
+.center {
+    text-align: center;
+    padding: 20px;
+}
+
+.tables-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+.table-container {
+    max-height: 400px; /* 设置容器的最大高度，启用滚动条 */
+    overflow-y: auto; /* 显示垂直滚动条 */
+}
+
+#bomTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#bomTable th {
+    position: sticky;
+    top: 0; /* 表格头部始终位于容器顶部 */
+    background-color: #212529; /* 表格头部的背景颜色 */
+}
+.sticky-header th {
+    position: sticky;
+    top: 0;
+    z-index: 1; /* 将 z-index 设置为较高的值，确保在复选框之上 */
+}
+
+
+.table {
+    width: 90%;
+    padding: 20px;
+    padding-top: 1px;
+    background-color: #343a40;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 70vh;
+    overflow-y: auto;
+    border-radius: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #495057;
+    text-align: left;
+}
+
+th {
+    background-color: #212529;
+}
+
+h1, h2 {
+    color: #fff;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: "Microsoft JhengHei", Arial, sans-serif;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#bomdiv, #bomdiv2{
+    max-height: 70vh;
+}
+
+#machine_number ,#keyword{
+    border-radius: 7px;
+    border: 0em;
+}
+
+#machine_number ,#keyword{
+    border: 0;
+    border-radius: 7px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.pur_num {
+    border-radius: 5px;
+    border: 0em;
+    width: 5vw;
+    font-size: 20px;
+}
+.editable-quantity{
+    border-radius: 5px;
+    border: 0em;
+    width: 5vw;
+    font-size: 15px;
+    margin-right: 1vw;
+    margin-bottom: 5px;
+}
+
+.export-csv-button{
+    background-color: rgb(75, 155, 82);
+}
+.export-csv-button:hover{
+    background-color: rgb(58, 124, 64);
+}
+
+
+
+#home-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+#home-link a{
+    color: #dddcdc;
+    text-decoration: none;
+    transition: filter 0.3s ease-in-out;
+}
+#home-link:hover a {
+    text-decoration: none;
+}
+#home-link img {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    transition: background-color 0.3s ease-in-out;
+    vertical-align: middle; /* 新增的垂直對齊屬性 */
+
+}
+
+#home-link:hover, #manual:hover, .filter:hover {
+    filter: brightness(80%);
+}
+
+#manual img {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    transition: background-color 0.3s ease-in-out;
+    vertical-align: middle;
+}
+
+#manual {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    z-index: 1000;
+}
+#manual a{
+    color: #fff;
+    text-decoration: none;
+    transition: filter 0.3s ease-in-out;
+}
+
+
+td.none-value {
+    background-color: #ad0e0e; /* 紅色背景顏色 */
+}
+
+.qtyinput{
+    border-radius: 5px;
+    border: none;
+    height: 18px;
+    width: 5vw;
+}
+.partinput:focus{
+    outline: none;
+}
+
+.partinput{
+    background-color: #7c7c7c;
+}
+
+.filter{
+    position: absolute;
+    top: 138px;
+    right: 100px;
+    flex-direction: column;
+}
+.filter img {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    transition: background-color 0.3s ease-in-out;
+    vertical-align: middle; /* 新增的垂直對齊屬性 */
+}
+/* 此checkbox不以原先方式顯示 */
+.filter input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]#filter-checkbox:checked ~ label {
+    filter: brightness(50%);
+}
+
+.filter :hover{
+    cursor: pointer;
+}
+
+/* 文字樣式 */
+.filter label .filter-label span {
+    margin-top: 10px; /* 圖文距離 */
+}
+
+#confirmation_detail{
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    max-height: 80vh;
+}
+
+#det_qty{
+    background-color: #666586;
+}
+#det_qty_com{
+    background-color: #7a7997;
+}
+
+tr:hover {
+    background-color: #1e68b375;
+    color: #fff;
+}
+.empty-row {
+    /* 零件包內零件的行顯示顏色較淺 */
+    background-color: #4e555c;; 
+}
+.purchase_checkbox{
+    transform: scale(1.5);
+    border: none;
+    outline: none;
+}
+
+::selection {
+    background-color: rgb(221, 114, 51); /* 被選取文字背景色 */
+    color: black; /* 被選取文字字體色 */
+}
+
+#clear-filter-button{
+    margin-left: 3px;
+    background-color: #495057;
+}
+
+#clear-filter-button:hover{
+    filter: brightness(70%);
+}
+
+/* 将表头设置为 sticky，使其悬浮在页面顶部 */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 10px;
+    z-index: 2; /* 确保表头在按钮之上 */
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 按钮样式 */
+#checkout-button {
+    position: fixed;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    right: 219px;
+    top: 11vh;
+    font-size: 25px;
+    background-color: rgb(238, 126, 34);
+}
+#checkout-button:hover{
+    filter: brightness(70%);
+}
+/* 当页面滚动时保持按钮可见 */
+#checkout-button.sticky {
+    position: fixed;
+    top: 0;
+    right: 10px; /* 可以调整按钮的位置 */
+    z-index: 1;
+}
+
+/* 当页面滚动时保持表头可见 */
+.table-header.sticky {
+    position: sticky;
+}

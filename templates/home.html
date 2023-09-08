@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
+    <title>零件包測試系統</title>
+    <style>
+        /* 直接將 CSS 樣式寫在這裡 */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            margin: 15vw;
+            margin-top: 15vh;
+            width: 40vw;
+            text-align: center;
+            padding: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        a {
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 36px;
+            margin-top: 5vh;
+            margin-bottom: 5vh;
+        }
+        a:hover {
+            text-decoration: none;
+            color: #fff;
+            filter: brightness(70%);
+        }
+        a:visited {
+            color: #fff;
+        }
+    </style>  
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-content">
+            <a href="{{ url_for('login') }}"  rel="noopener noreferrer" style="margin-right: 5vw;">報價下單測試</a>
+            <a href="http://77.0.1.89:8011/"  rel="noopener noreferrer" style="margin-left: 5vw;">零件包模擬</a>
+        </div>
+    </div>
+</body>
+</html>

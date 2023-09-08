@@ -1,0 +1,230 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #212529;
+    color: #fff;
+}
+
+.center {
+    text-align: center;
+    padding: 20px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    margin-bottom: 0px;
+}
+
+.search-input {
+    margin: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.search-row label{
+    text-align:end;
+    width: 90px;
+}
+
+/* 文字輸入框樣式 */
+#machine_number, #model, #size, #feeder
+,#agent_code,#agent_password, #customer_name, #customer_id
+{
+    border: 0;
+    border-radius: 7px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+label,
+input {
+    margin-right: 5px;
+}
+
+.search-button {
+    margin-top: 10px;
+}
+
+/* 表格外容器樣式 */
+.tables-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* 表格樣式 */
+.table {
+    background-color: #343a40;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    border-radius: 20px;
+    /* overflow: auto; */
+}
+
+table {
+    width: 90vw;
+    border-collapse: collapse;
+}
+
+.table-header {
+    position: fixed; /* 將表格標頭固定定位 */
+    top: 0; /* 距離頂部的距離 */
+    background-color: #343a40;
+    width: 100%;
+    z-index: 1; /* 確保表格標頭在最上層 */
+}
+
+.table-content {
+    margin-top: 40px; /* 表格內容與標頭的距離 */
+    /* overflow: auto; */
+}
+
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #495057;
+    text-align: left;
+    color: #fff;
+}
+
+th {
+    background-color: #17191a;
+}
+
+th:hover{
+    cursor: pointer;
+}
+
+/* 按鈕樣式 */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* 滑鼠停在行上時 */
+tr:hover {
+    background-color: #1e68b375;
+    color: #fff;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: "Microsoft JhengHei", Arial, sans-serif;
+}
+
+/* 鏈接樣式 */
+a {
+    color: #00c3ff;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #00d9ff;
+}
+
+a:hover {
+    color: #f861df;
+    text-decoration: underline;
+}
+
+/* 點擊行樣式 */
+#tr1:hover {
+    cursor: pointer;
+}
+
+.sort-arrow {
+    margin-left: 3px;
+    font-size: 10px;
+    opacity: 0.5;
+    /* transition: transform 0.1s; */
+}
+
+th[data-sort]:hover .sort-arrow {
+    opacity: 1;
+}
+
+th[data-sort].asc .sort-arrow {
+    transform: rotate(180deg);
+}
+
+th[data-sort].desc .sort-arrow {
+    transform: rotate(0deg);
+}
+
+#home-link {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+}
+
+#home-link a{
+    color: #dddcdc;
+    text-decoration: none;
+    transition: filter 0.3s ease-in-out;
+}
+#home-link:hover a {
+    text-decoration: none;
+}
+#home-link img {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    transition: background-color 0.3s ease-in-out;
+    vertical-align: middle; /* 新增的垂直對齊屬性 */
+
+}
+
+#home-link :hover {
+    filter: brightness(80%);
+}
+
+#inquiry_record{
+    position: absolute;
+    top: 15px;
+    right: 120px;
+    z-index: 1000;
+}
+#inquiry_record img {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    transition: background-color 0.3s ease-in-out;
+    vertical-align: middle; /* 新增的垂直對齊屬性 */
+}
+#inquiry_record:hover {
+    filter: brightness(80%);
+}
+#inquiry_record:hover a{
+    text-decoration: none; /* 移除 hover 時的底線 */
+}
+#inquiry_record a{
+    color: #dddcdc;
+}
+
+.user-info {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px; /* 調整文字大小 */
+    text-align: center; /* 調整文字對齊方式 */
+    padding: 0px 10px; /* 調整內邊距，上下和左右分別為5px和10px */
+}
+
+::selection {
+    background-color: rgb(221, 114, 51); /* 被選取文字背景色 */
+    color: black; /* 被選取文字字體色 */
+}

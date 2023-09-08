@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles2.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
+    <title>詢價確認</title>
+</head>
+<body>
+    <h1 style="margin-left: 5vw;margin-top: 3vh;">詢價明細確認</h1>
+    <button id="inquiry-button" style="position: absolute;top: 25px;right: 100px;">進行詢價</button>
+    <button id="back-button" class="back-button" style="position: absolute;top: 25px;right: 200px;">繼續新增</button>
+    <div class="tables-container">
+        <div class="table" id = "confirmation_detail">
+            <table>
+                <tr>
+                    <th>父件/零件包</th>
+                    <th>機號</th>
+                    <th>工單ID</th>
+                    <th>可選材料</th>
+                    <th>說明</th>
+                    <th>組別</th>
+                    <th>用量/單位數量</th>
+                    <th style="width: 10vw;">欲購數量</th>
+                </tr>
+                {% for row in selected_data %}
+                {% if row.sbom_code == '' and row.sbom_material != '' %}
+                <tr class="empty-row">
+                    <td style="font-size: 0px;">{{ row.sbom_par }}</td>
+                {% else %}
+                <tr>
+                    <td>{{ row.sbom_par }}</td>
+                {% endif %}
+                    <td>{{ row.sbom_code }}</td>
+                    <td>{{ row.sbom_lot }}</td>
+                    <td>{{ row.sbom_material }}</td>
+                    <td>{{ row.sbom_desc }}</td>
+                    <td>{{ row.sbom_group }}</td>
+                    <td>{{ row.sbom_qty_per }}</td>
+                    {% if row.sbom_code != '' and row.sbom_material != '' %}
+                        <td><input type="number"  class="editable-quantity" value="{{ row.purchase_quantity }}"><button class="delete-row">删除</button></td>
+                    {% elif row.sbom_material == '' %}
+                        <td><input type="number" name="purchase_quantity" class="editable-quantity" id ="purchase_quantity_{{ row.sbom_par }}" value="{{ row.purchase_quantity }}"><button class="delete-row">删除</button></td>
+                    {% else %}
+                        <td name="part_quantity" id ="part_quantity_{{ row.sbom_par }}">{{ row.purchase_quantity }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div id="result-container"></div>
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='script3.js') }}"></script>
+</html>
+
+

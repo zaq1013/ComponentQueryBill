@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
+    <title>代理商 - 客戶列表</title>
+</head>
+<body>
+    <div class="user-info">
+        <p>代理：{{ session['agent_code'] }}</p>
+    </div>
+    <div id="inquiry_record">
+        <a href="{{ url_for('list_inquiries') }}">
+            查看詢價紀錄
+            <img src="{{ url_for('static', filename='details2.png') }}" alt="Details" id="details-icon">
+        </a>
+    </div>
+    <div id="home-link">
+        <a href="{{ url_for('login') }}">
+            <img src="{{ url_for('static', filename='logout.png') }}" alt="Home">
+            登出
+        </a>
+    </div>
+    <div class="center">
+        <h1>客戶列表</h1>
+        <form action="/search" method="post" class="search-form">
+            <div class="search-input search-row">
+                <label for="customer_id">客戶ID：</label>
+                <input type="text" id="customer_id" name="customer_id" value="{{ request.form['customer_id'] }}">
+            </div>
+            <div class="search-input search-row">
+                <label for="customer_name">客戶名稱：</label>
+                <input type="text" id="customer_name" name="customer_name" value="{{ request.form['customer_name'] }}">
+            </div>
+            <div class="search-input search-row">
+                <label for="machine_number">機號：</label>
+                <input type="text" id="machine_number" name="machine_number" value="{{ request.form['machine_number'] }}">
+            </div>
+            <div class="search-button">
+                <button type="submit">搜尋</button>
+            </div>
+        </form>
+        <div class="tables-container">
+            {% if show_result_table %}
+            <div class="table" id="resultTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-sort="代理">代理 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="客戶ID">客戶ID <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="客戶Name">客戶名稱 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="訂單號碼">訂單號碼 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="機號">機號 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="機台料號">機台料號 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="機種">機種 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="尺吋">尺吋 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="工單ID">工單ID <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="業務員">業務員 <span class="sort-arrow"&#9660;></span></th>
+                            <th data-sort="出貨日期">出貨日期 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="說明一">說明一 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="口數">口數 <span class="sort-arrow">&#9660;</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in query_results %}
+                        <tr id="tr1" class="clickable-row" data-href="{{ url_for('component', machine_number=row.機號) }}">
+                            <td data-column="代理">{{ row.代理 }}</td>
+                            <td data-column="客戶ID">{{ row.客戶ID }}</td>
+                            <td data-column="客戶Name">{{ row.客戶Name }}</td>
+                            <td data-column="訂單號碼">{{ row.訂單號碼 }}</td>
+                            <td data-column="機號">
+                                <a href="{{ url_for('component', machine_number=row.機號) }}" target="_blank" rel="noopener noreferrer">{{ row.機號 }}</a>
+                            </td>
+                            <td data-column="機台料號">{{ row.機台料號 }}</td>
+                            <td data-column="機種">{{ row.機種 }}</td>
+                            <td data-column="尺吋">{{ row.尺吋 }}</td>
+                            <td data-column="工單ID">{{ row.工單ID }}</td>
+                            <td data-column="業務員">{{ row.業務員 }}</td>
+                            <td data-column="出貨日期">{{ row.出貨日期 }}</td>
+                            <td data-column="說明一">{{ row.說明一 }}</td>
+                            <td data-column="口數">{{ row.口數 }}</td>   
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</html>

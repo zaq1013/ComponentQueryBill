@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles2.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
+    <title>自動報價零件包查詢系統</title>
+</head>
+<body>
+    <div class="center">
+        <h1>機台零件包及料號詳細: {{machine_number}}</h1>
+        <!-- <form action="{{ url_for('component', machine_number=machine_number, keyword='') }}" method="post" class="search-form">
+            <label for="machine_number">機號：</label>
+            <input type="text" id="machine_number" name="machine_number" value="{{ machine_number }}" required>
+            <button type="submit">查詢</button>
+        </form> -->
+        <form action="{{ url_for('component', machine_number=machine_number , keyword=keyword) }}" method="post" class="search-form" hidden>
+            <label for="machine_number" hidden>機號：</label>
+            <input type="text" id="machine_number" name="machine_number" value="{{ machine_number }}" required hidden>
+            <button type="submit">查詢</button>
+        </form>
+        <label for="keyword">關鍵字：</label>
+        <input type="text" id="keyword" name="keyword">
+        <button id="filter-button" onclick="searchTable()" style="margin-left: 1px;">搜尋</button>
+        <button id="clear-filter-button"  onclick="clearFilter()">清除條件</button>
+
+
+    </div>
+    <div id="manual">
+        <!-- <a href="{{ url_for('link', machine_number=machine_number, _external=True) }}" target="_blank"> -->
+        <a href="{{ url_for('link',machine_number=machine_number) }}" target="_blank">
+            使用說明
+            <img src="{{ url_for('static', filename='manual2.png') }}" alt="Home">
+        </a>
+    </div>
+    <div id="home-link">
+        <a href="{{ url_for('search') }}">
+            <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="Home">
+            返回列表
+        </a>
+    </div>
+    <div class="filter">
+        <input type="checkbox" id="filter-checkbox">
+        <label for="filter-checkbox" style="height: 50px;width: 50px;">
+            <span>已勾選</span>
+            <img src="{{ url_for('static', filename='filter2.png') }}" alt="Filter">
+        </label>
+    </div>
+    <button id="checkout-button" >確認詢價單</button>
+
+    <div class="tables-container">
+        <div class="table" id="bomdiv">
+            <h2>材料表</h2> 
+            <button id="toggleButton1" hidden>展開/收縮</button>
+            <button class="export-csv-button" hidden data-type="bom">匯出 CSV</button>
+            
+            <table id="bomTable">
+                <tr class="sticky-header" id="table-header">
+                    <th style="border-top-left-radius: 8px;border-bottom-left-radius: 8px;">購買</th>
+                    <th>父件/零件包</th>
+                    <th>機號</th>
+                    <th>工單ID</th>
+                    <th>可選材料</th>
+                    <th>說明</th>
+                    <th>組別</th>
+                    <th>用量</th>
+                    <th style="border-top-right-radius: 8px;border-bottom-right-radius: 8px;">欲購數量</th>
+                </tr>
+                {% for row in bom_rows %}
+                <tr>
+                    <td><input type="checkbox" name="purchase_checkbox" class="purchase_checkbox"></td>
+                    <td>{{ row.sbom_par }}</td>
+                    <td>{{ row.sbom_code }}</td>
+                    <td>{{ row.sbom_lot }}</td>
+                    <td >{{ row.sbom_comp }}</td>
+                    <td>{{ row.sbom_desc }}</td>
+                    <td>{{ row.sbom_group }}</td>
+                    <td>{{ row.sbom_qty_per }}</td>
+                    <td><input type="number" name="purchase_quantity" value="" class = "pur_num"></td>
+                </tr>
+                {% endfor %}
+                {% for part_group, parts in grouped_parts.items() %}
+                <!-- 顯示零件包名稱和共通資訊 -->
+                <tr>
+                    <td><input type="checkbox" name="purchase_checkbox" class="purchase_checkbox"></td>
+                    <td>{{ part_group }}</td>
+                    <td>{{ parts[0].sbom_code}}</td>
+                    <td>{{ parts[0].sbom_lot}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><input type="number" name="purchase_quantity" id ="purchase_quantity_{{ part_group }}" class="qtyinput"></td>
+                </tr>
+                <!-- 該零件包中各個零件，欲購數量欄位不可變更，並會與零件包數量同步 -->
+                {% for part in parts %}
+                <tr class="empty-row">
+                    <td><input type="checkbox" name="purchase_checkbox" class="purchase_checkbox" disabled></td>
+                    <td style="color: #495057; font-size: 0px;">{{ part_group }}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ part.sbom_comp }}</td>
+                    <td>{{ part.sbom_desc }}</td>
+                    <td>{{ part.sbom_group }}</td>
+                    <td>{{ part.sbom_qty_per }}</td>
+                    <td><input type="number" name="part_quantity" readonly id ="part_quantity_{{ part_group }}" class="qtyinput partinput" ></td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+            </table>
+            <form id="confirmation_form" action="{{ url_for('confirmation') }}" method="post">
+                <input type="hidden" name="selected_data" id="selected_data">
+            </form>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='script2.js') }}"></script>
+</html>

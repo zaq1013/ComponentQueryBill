@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
+    <title>代理商登入</title>
+    <style>
+        /* 直接將 CSS 樣式寫在這裡 */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .login-content {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>  
+</head>
+<body>
+    <div class="center">
+        <div class="login-container">
+            <div class="login-content" style="margin-top: 10rem">
+                <h1>代理商登入</h1>
+                <form action="/login" method="post" class="login-form search-form">
+                    <div class="login-input search-input">
+                        <label for="agent_code">代理商代號：</label>
+                        <input type="text" id="agent_code" name="agent_code" required>
+                    </div>
+                    <div class="login-input search-input">
+                        <label for="agent_code">代理商密碼：</label>
+                        <input type="password" id="agent_password" name="agent_password" >
+                    </div>
+                    <div class="login-button search-input">
+                        <button type="submit" style="margin-top: 10px;">登入</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+    <div id="home-link">
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='home-icon.png') }}" alt="Home">
+        </a>
+    </div>
+    <div id="error-message">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <script>
+                    alert("{{ messages[0] }}");
+                </script>
+            {% endif %}
+        {% endwith %}
+    </div>
+    
+</body>
+
+</html>

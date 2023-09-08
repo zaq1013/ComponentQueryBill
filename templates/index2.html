@@ -25,7 +25,12 @@
         <button id="filter-button" onclick="searchTable()" style="margin-left: 1px;">搜尋</button>
         <button id="clear-filter-button"  onclick="clearFilter()">清除條件</button>
 
-
+        <div id="inquiry_record">
+            <a href="{{ url_for('list_inquiries') }}">
+                查看詢價紀錄
+                <img src="{{ url_for('static', filename='details2.png') }}" alt="Details" id="details-icon">
+            </a>
+        </div>
     </div>
     <div id="manual">
         <!-- <a href="{{ url_for('link', machine_number=machine_number, _external=True) }}" target="_blank"> -->

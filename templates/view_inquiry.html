@@ -65,16 +65,24 @@ th {
             </a>
         </div>
     </div> -->
-    <h1 style="padding-top: auto;padding-left: 2.3vw;">詳細詢價紀錄: {{inquiry_id}}</h1>
-    <table>
+    <h1 style="padding-top: 3vh;padding-left: 2.3vw;">詳細詢價紀錄: {{inquiry_id}}</h1>
+    <div style="position: absolute;top: 35px;right: 10vw; font-size: 18px;">
+        {% for b in basic %}
+            單號: {{b['單號']}} <br>
+            代理: {{b['代理']}} ( {{b['代理名稱']}})<br> 
+            客戶: {{b['客戶ID']}} ( {{b['客戶名稱']}} ) <br>
+            詢價日: {{b['詢價日']}}
+        {% endfor %}
+    </div>
+    <table style="margin-top: 8vh;">
         <tr>
-            <th>機號</th>
             <th>項次</th>
+            <th>機號</th>
             <th>項目</th>
             <th>零件</th>
             <th>機台用量/單位數量</th>
             <th>訂購量</th>
-            <th>詢價金額</th>
+            <th>報價金額</th>
             <th>類型</th>
         </tr>
         {% for detail in inquiry_details %}
@@ -83,8 +91,8 @@ th {
             {% else %}
             <tr >
             {% endif %}
-                <td>{{detail['機號']}}</td>
                 <td>{{ detail['項次'] }}</td>
+                <td>{{detail['機號']}}</td>
                 {% if detail['類型'] == '零件包內零件'%}
                 <td></td>  <!-- 空白列 -->
                 <td>{{ detail['料號'] }}</td>
@@ -98,7 +106,7 @@ th {
                 <td>{{ detail['機台用量'] }}</td>
                 {% endif %}
                 <td>{{ detail['訂購量'] }}</td>
-                <td>{% if detail['訊價金額'] == None%}{{ detail['詢價金額'] }}{% else %}{% endif %}</td>
+                <td>{% if detail['訊價金額'] == None%}{{ detail['詢價金額'] }}{% else %}0{% endif %}</td>
                 <td>{{ detail['類型'] }}</td>
             </tr>
         {% endfor %}

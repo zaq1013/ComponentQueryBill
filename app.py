@@ -239,8 +239,8 @@ def receive_data():
                 inq_type = row['類型']
                 
                 
-                cursor.execute("INSERT INTO inq_det (inq_det_num, inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type) VALUES (?, ?, ?, ?, ?, ?)",
-                            (new_num,inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type))
+                cursor.execute("INSERT INTO inq_det (inq_det_num, inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type, inq_code) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                            (new_num,inq_item, inq_comp, inq_mach_qty, inq_order_qty, inq_type,machine_number))
                 connection.commit()
             print('Data submitted successfully')
             return 'Data submitted successfully'
@@ -258,7 +258,7 @@ def list_inquiries():
     # 示例詢價紀錄列表（代碼需要替換成實際的查詢和設置狀態邏輯）
     connection = pyodbc.connect(f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}')
     cursor = connection.cursor()
-    cursor.execute(f"SELECT  inq_num as 單號, inq_bill as 代理, inq_cust as 客戶,  inq_summitdate as 詢價日 ,inq_completedate as 完成日 FROM inq_mstr WHERE inq_bill = '{agent}' ORDER BY inq_summitdate DESC")
+    cursor.execute(f"SELECT inq_num as 單號, inq_bill as 代理 ,(SELECT cust_name FROM customer WHERE cust_id = inq_bill) as 代理名稱, cust_id as 客戶ID, cust_name as 客戶名稱,  inq_summitdate as 詢價日 ,inq_completedate as 完成日 from inq_mstr join customer on inq_mstr.inq_cust = customer.cust_id WHERE inq_bill = '{agent}' ORDER BY inq_summitdate DESC")
     inquiries = cursor.fetchall()
     return render_template('list_inquiries.html', inquiries=inquiries)
 
@@ -275,14 +275,15 @@ def view_inquiry(inquiry_id):
     connection = pyodbc.connect(f'DRIVER=SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}')
     cursor = connection.cursor()
     cursor.execute(f"SELECT  inq_item as 項次, inq_comp as 料號, inq_mach_qty as 機台用量, inq_order_qty as 訂購量, inq_inq_price as 詢價金額 ,inq_type as 類型, inq_code as 機號 FROM inq_det WHERE inq_det_num = '{inquiry_id}' order by inq_item")
-    
     inquiry_details = cursor.fetchall()
-    return render_template('view_inquiry.html', inquiry_details=inquiry_details,inquiry_id=inquiry_id)
+    cursor.execute(f"SELECT inq_num as 單號, inq_bill as 代理 ,(SELECT cust_name FROM customer WHERE cust_id = inq_bill) as 代理名稱, cust_id as 客戶ID, cust_name as 客戶名稱, inq_summitdate as 詢價日 ,inq_completedate as 完成日 from inq_mstr join customer on inq_mstr.inq_cust = customer.cust_id WHERE inq_bill = '{agent}' AND inq_num = '{inquiry_id}'")
+    basic = cursor.fetchall()
+    return render_template('view_inquiry.html', inquiry_details=inquiry_details,inquiry_id=inquiry_id,basic=basic)
 
 
 
 app.logger.setLevel(logging.ERROR)  # 只記錄錯誤信息
-if __name__ == '__main__':
-    app.run(debug=False,port=8071,host='0.0.0.0')
 # if __name__ == '__main__':
-#     app.run(debug=True)
+#     app.run(debug=False,port=8071,host='0.0.0.0')
+if __name__ == '__main__':
+    app.run(debug=True)

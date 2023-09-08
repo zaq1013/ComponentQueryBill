@@ -307,3 +307,46 @@ tr:hover {
 .table-header.sticky {
     position: sticky;
 }
+
+#back-button, #inquiry-button{
+    padding: 13px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    right: 219px;
+    top: 11vh;
+    font-size: 25px;
+    background-color: rgb(238, 126, 34);
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+#back-button{
+    background-color: #007bff;
+}
+#back-button:hover, #inquiry-button:hover{
+    filter: brightness(70%);
+}
+
+#inquiry_record{
+    position: absolute;
+    top: 15px;
+    right: 120px;
+    z-index: 1000;
+}
+#inquiry_record img {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    transition: background-color 0.3s ease-in-out;
+    vertical-align: middle; /* 新增的垂直對齊屬性 */
+}
+#inquiry_record:hover {
+    filter: brightness(80%);
+}
+#inquiry_record:hover a{
+    text-decoration: none; /* 移除 hover 時的底線 */
+}
+#inquiry_record a{
+    color: #dddcdc;
+    text-decoration: none;
+}

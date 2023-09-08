@@ -91,7 +91,9 @@ tr:hover{
         <tr>
             <th>單號</th>
             <th>代理</th>
+            <th>代理名稱</th>
             <th>客戶</th>
+            <th>客戶名稱</th>
             <th>詢價日</th>
             <th>狀態</th>
         </tr>
@@ -103,10 +105,12 @@ tr:hover{
                     <!-- </a> -->
                 </td>
                 <td>{{ inquiry['代理'] }}</td>
-                <td>{{ inquiry['客戶'] }}</td>
+                <td>{{ inquiry['代理名稱'] }}</td>
+                <td>{{ inquiry['客戶ID'] }}</td>
+                <td>{{ inquiry['客戶名稱'] }}</td>
                 <td>{{ inquiry['詢價日'] }}</td>
                 {% if inquiry['狀態'] == Null %}
-                <td>未完成</td>
+                <td>詢價中</td>
                 {% else %}
                 <td>{{ inquiry['狀態'] }}</td>
                 {% endif %}

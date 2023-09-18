@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
+    <title>{{ session['agent_code'] }} 客戶列表</title>
+</head>
+<body>
+    <div class="user-info">
+        <p>代理：{{ session['agent_code'] }}</p>
+    </div>
+    <div id="inquiry_record" class = 'icon'>
+        <a href="{{ url_for('list_inquiries') }}">
+            查看詢價紀錄
+            <img src="{{ url_for('static', filename='details2.png') }}" alt="Details" id="details-icon">
+        </a>
+    </div>
+    <div id="home-link">
+        <a href="{{ url_for('login') }}">
+            <img src="{{ url_for('static', filename='logout.png') }}" alt="Home">
+            登出
+        </a>
+    </div>
+     
+    <div class="center">
+        <h1 style="margin-top: 10px;">客戶列表</h1>
+        <form action="/search_customer" method="post" class="search-form">
+            <div class="search-input search-row">
+                <label for="customer_id">客戶ID：</label>
+                <input type="text" id="customer_id" name="customer_id" value="{{ request.form['customer_id'] }}">
+            </div>
+            <div class="search-input search-row">
+                <label for="customer_name">客戶名稱：</label>
+                <input type="text" id="customer_name" name="customer_name" value="{{ request.form['customer_name'] }}">
+            </div>
+            <div class="search-button">
+                <button type="submit">搜尋</button>
+            </div>
+        </form>
+        <div class="tables-container">
+            {% if show_result_table %}
+            <div class="table" id="resultTable" style="max-height: 65vh;">
+                <table id="cus_resultTable">
+                    <thead>
+                        <tr class="sticky-header" id="table-header">
+                            <th data-sort="代理" style="border-top-left-radius: 8px;border-bottom-left-radius: 8px;">代理 </th>
+                            <th data-sort="代理名">代理名稱 </th>
+                            <th data-sort="客戶ID">客戶ID <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="客戶名">客戶名稱 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="訂單數">訂單數 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="詢價" style="text-align: center; border-top-right-radius: 8px;border-bottom-right-radius: 8px;">進行此客戶之詢價</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in query_results %}
+                        <tr>
+                            <td data-column="代理">{{ row.代理 }}</td>
+                            <td data-column="代理名稱">{{ row.代理名 }}</td>
+                            <td data-column="客戶ID">{{ row.客戶ID }}</td>
+                            <td data-column="客戶名">{{ row.客戶名 }}</td>
+                            <td data-column="訂單數">{{ row.訂單數 }}</td>
+                            <td>
+                                <form action="{{ url_for('search') }}" method="post" class="hidden-form" >
+                                    <input type="hidden" name="customer_id" value="{{ row.客戶ID }}">
+                                    <input type="hidden" name="customer_name" value="">
+                                    <input type="hidden" name="machine_number" value="">
+                                    <button type="submit" class="cus_inq_button">詢價</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <script>
+        alert("{{ messages[0] }}");
+    </script>
+{% endif %}
+{% endwith %}
+</html>

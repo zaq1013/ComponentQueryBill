@@ -23,12 +23,19 @@
         <label for="keyword">關鍵字：</label>
         <input type="text" id="keyword" name="keyword">
         <button id="filter-button" onclick="searchTable()" style="margin-left: 1px;">搜尋</button>
+        <br>
         <button id="clear-filter-button"  onclick="clearFilter()">清除條件</button>
 
-        <div id="inquiry_record">
+        <div id="inquiry_record" class="icon">
             <a href="{{ url_for('list_inquiries') }}">
                 查看詢價紀錄
                 <img src="{{ url_for('static', filename='details2.png') }}" alt="Details" id="details-icon">
+            </a>
+        </div>
+        <div id="cart" class="icon">
+            <a href="{{ url_for('show_cart') }}" >
+                購物車
+                <img src="{{ url_for('static', filename='cart.png') }}" alt="Home">
             </a>
         </div>
     </div>
@@ -42,7 +49,7 @@
     <div id="home-link">
         <a href="{{ url_for('search') }}">
             <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="Home">
-            返回列表
+            返回客戶機台列表
         </a>
     </div>
     <div class="filter">
@@ -52,7 +59,7 @@
             <img src="{{ url_for('static', filename='filter2.png') }}" alt="Filter">
         </label>
     </div>
-    <button id="checkout-button" >確認詢價單</button>
+    <button id="checkout-button" >加入購物車</button>
 
     <div class="tables-container">
         <div class="table" id="bomdiv">

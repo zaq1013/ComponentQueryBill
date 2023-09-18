@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>詢價紀錄列表</title>
+    <title>{{ session['agent_code'] }} 詢價紀錄列表</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
 </head>
@@ -21,11 +21,15 @@ body {
     padding: 10px;
     position: fixed;
     top: 10px;
-    left: 2vw;
+    left: 10px;
     right: 0;
     z-index: 1000;
 }
-
+#inquiry-record{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
 #home-link a,
 #inquiry-record a {
     display: flex;
@@ -39,16 +43,26 @@ body {
 #inquiry-record img {
     width: 30px;
     height: 30px;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 #home-link:hover a,
-#inquiry-record:hover a {
+#inquiry-record:hover a{
     text-decoration: none;
+    filter: brightness(70%);
+    font-size: 16px!important;
 }
-
-#home-link:hover a,
-#inquiry-record:hover a {
+#home-link:hover a:not(.normal-font) span,
+#inquiry-record:hover a:not(.normal-font) span{
+    text-decoration: none;
+    font-size: 16px!important;
+    background-color: #212529;
+    filter: brightness(100%);
+    padding: 5px 5px 5px 0;
+    border-radius: 5px;
+}
+#home-link:hover a:not(.normal-font) img,
+#inquiry-record:hover a:not(.normal-font) img{
     filter: brightness(80%);
 }
 
@@ -59,26 +73,43 @@ body {
 
 table {
     width: 90vw;
-    margin: 0 auto;
+    margin: 0;
     margin-bottom: 5vh;
     background-color: #343a40;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
+    border-radius: 10px;
     border-collapse: collapse;
 }
 tr:hover{
     cursor: pointer;
 }
-
+tbody td{
+    border-bottom: none;
+    border-top: 1px solid #495057;
+}
+.normal-font {
+    font-size: 16px;
+}
+.hidden-font {
+    font-size: 0;
+}
 
 </style>
 <body>
     <div id="top-bar">
+        {% if session['customer'] is not none %}
         <div id="inquiry-record">
-            <a href="{{ url_for('search') }}">
-                <img src="{{ url_for('static', filename='home-icon.png') }}" alt="previous">
-                 返回列表
+            <a href="{{ url_for('search') }}" class="normal-font">
+                <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
+                 <span>返回機台列表</span>
+            </a>
+        </div>
+        {% endif %}
+        <div id="home-link" style="left: 4px;top: 45px;">
+            <a href="{{ url_for('search_customer') }}" class="normal-font">
+                <img src="{{ url_for('static', filename='home-icon.png') }}" alt="Home" style="margin-right: 5px;">
+                <span>返回客戶列表</span>
             </a>
         </div>
         <div class="user-info">
@@ -86,46 +117,64 @@ tr:hover{
         </div>
     </div>
     <div class="header">
-        <h1>詢價紀錄列表</h1>
+        <h1>{{ session['agent_code'] }} 詢價紀錄列表</h1>
     </div>
-    <table>
-        <tr>
-            <th>單號</th>
-            <th>代理</th>
-            <th>代理名稱</th>
-            <th>客戶</th>
-            <th>客戶名稱</th>
-            <th>詢價日</th>
-            <th>狀態</th>
-        </tr>
-        {% for inquiry in inquiries %}
-            <tr class="clickable-row" data-href="{{ url_for('view_inquiry', inquiry_id=inquiry['單號']) }}">
-                <td style="color: #00c3ff;">
-                    <!-- <a href="{{ url_for('view_inquiry', inquiry_id=inquiry['單號']) }}" target="_blank"> -->
-                        {{ inquiry['單號'] }}
-                    <!-- </a> -->
-                </td>
-                <td>{{ inquiry['代理'] }}</td>
-                <td>{{ inquiry['代理名稱'] }}</td>
-                <td>{{ inquiry['客戶ID'] }}</td>
-                <td>{{ inquiry['客戶名稱'] }}</td>
-                <td>{{ inquiry['詢價日'] }}</td>
-                {% if inquiry['狀態'] == Null %}
-                <td>詢價中</td>
-                {% else %}
-                <td>{{ inquiry['狀態'] }}</td>
-                {% endif %}
+    <div class="tables-container">
+        <table>
+            <tr class="sticky-header" id="table-header">
+                <th style="border-top-left-radius: 8px">單號</th>
+                <th>代理</th>
+                <th>代理名稱</th>
+                <th>客戶</th>
+                <th>客戶名稱</th>
+                <th>詢價日</th>
+                <th style="border-top-right-radius: 8px">狀態</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for inquiry in inquiries %}
+                <tr class="clickable-row" data-href="{{ url_for('view_inquiry', inquiry_id=inquiry['單號']) }}">
+                    <td style="color: #00c3ff;">
+                        <!-- <a href="{{ url_for('view_inquiry', inquiry_id=inquiry['單號']) }}" target="_blank"> -->
+                            {{ inquiry['單號'] }}
+                        <!-- </a> -->
+                    </td>
+                    <td>{{ inquiry['代理'] }}</td>
+                    <td>{{ inquiry['代理名稱'] }}</td>
+                    <td>{{ inquiry['客戶ID'] }}</td>
+                    <td>{{ inquiry['客戶名稱'] }}</td>
+                    <td>{{ inquiry['詢價日'] }}</td>
+                    {% if inquiry['狀態'] == Null %}
+                    <td>詢價中</td>
+                    {% else %}
+                    <td>{{ inquiry['狀態'] }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> -->
 <script>
 $(document).ready(function() {
     $('table').on('click', '.clickable-row', function() {
-    window.open($(this).data('href'), '_blank');
+    // window.open($(this).data('href'), '_blank');
+    window.location = $(this).data('href');
     });
 });
+$(window).scroll(function () {
+    var scrollTop = $(this).scrollTop();
+    if (scrollTop > 50) {
+        $('#inquiry-record a, #home-link a').removeClass('normal-font').addClass('hidden-font');
+    } else {
+        $('#inquiry-record a, #home-link a').removeClass('hidden-font').addClass('normal-font');
+    }
+});
 </script>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <script>
+        alert("{{ message[0] }}");
+    </script>
+{% endif %}
+{% endwith %}
 </html>

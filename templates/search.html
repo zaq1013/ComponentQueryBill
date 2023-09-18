@@ -5,35 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
-    <title>代理商 - 客戶列表</title>
+    <title>客戶機台列表 {{ session['customer'] }}</title>
 </head>
 <body>
     <div class="user-info">
         <p>代理：{{ session['agent_code'] }}</p>
     </div>
-    <div id="inquiry_record">
+    <div id="inquiry_record" class = 'icon'>
         <a href="{{ url_for('list_inquiries') }}">
             查看詢價紀錄
             <img src="{{ url_for('static', filename='details2.png') }}" alt="Details" id="details-icon">
         </a>
     </div>
-    <div id="home-link">
+    <!-- <div id="home-link">
         <a href="{{ url_for('login') }}">
             <img src="{{ url_for('static', filename='logout.png') }}" alt="Home">
             登出
         </a>
+    </div> -->
+    <div id="home-link">
+        <a href="{{ url_for('search_customer') }}">
+            <img src="{{ url_for('static', filename='home-icon.png') }}" alt="Home">
+            返回客戶列表
+        </a>
+    </div>
+    <div id="cart" class="icon">
+        <a href="{{ url_for('show_cart') }}">
+            購物車
+            <img src="{{ url_for('static', filename='cart.png') }}" alt="Home">
+        </a>
     </div>
     <div class="center">
-        <h1>客戶列表</h1>
+        <h1 style="margin-top: 15px;">客戶機台列表: {{ session['customer']}}</h1>
         <form action="/search" method="post" class="search-form">
-            <div class="search-input search-row">
-                <label for="customer_id">客戶ID：</label>
-                <input type="text" id="customer_id" name="customer_id" value="{{ request.form['customer_id'] }}">
-            </div>
-            <div class="search-input search-row">
-                <label for="customer_name">客戶名稱：</label>
-                <input type="text" id="customer_name" name="customer_name" value="{{ request.form['customer_name'] }}">
-            </div>
+                <label for="customer_id" hidden>客戶ID：</label>
+                <!-- <input type="text" id="customer_id" name="customer_id" value="{{ request.form['customer_id'] }}" hidden> -->
+                <input type="text" id="customer_id" name="customer_id" value="{{ session.get('customer', '') }}" hidden>
+                
+                <label for="customer_name" hidden>客戶名稱：</label>
+                <input type="text" id="customer_name" name="customer_name" value="{{ request.form['customer_name'] }}" hidden>
+            
             <div class="search-input search-row">
                 <label for="machine_number">機號：</label>
                 <input type="text" id="machine_number" name="machine_number" value="{{ request.form['machine_number'] }}">
@@ -44,11 +55,11 @@
         </form>
         <div class="tables-container">
             {% if show_result_table %}
-            <div class="table" id="resultTable">
-                <table>
+            <div class="table" id="resultTable" >
+                <table style="margin-top: 17px;">
                     <thead>
-                        <tr>
-                            <th data-sort="代理">代理 <span class="sort-arrow">&#9660;</span></th>
+                        <tr class="sticky-header" id="table-header">
+                            <th data-sort="代理" style="border-top-left-radius: 8px;border-bottom-left-radius: 8px;">代理 <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="客戶ID">客戶ID <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="客戶Name">客戶名稱 <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="訂單號碼">訂單號碼 <span class="sort-arrow">&#9660;</span></th>
@@ -60,7 +71,7 @@
                             <th data-sort="業務員">業務員 <span class="sort-arrow"&#9660;></span></th>
                             <th data-sort="出貨日期">出貨日期 <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="說明一">說明一 <span class="sort-arrow">&#9660;</span></th>
-                            <th data-sort="口數">口數 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="口數" style="border-top-right-radius: 8px;border-bottom-right-radius: 8px;">口數 <span class="sort-arrow">&#9660;</span></th>
                         </tr>
                     </thead>
                     <tbody>

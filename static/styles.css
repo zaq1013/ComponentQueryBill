@@ -18,6 +18,12 @@ body {
     margin: 20px;
     margin-bottom: 0px;
 }
+.hidden-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px;
+}
 
 .search-input {
     margin: 5px;
@@ -62,13 +68,22 @@ input {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: 20px;
     border-radius: 20px;
-    /* overflow: auto; */
+    overflow: auto;
+    padding-top:1px
 }
 
 table {
     width: 90vw;
     border-collapse: collapse;
 }
+#cus_resultTable{
+    width: 70vw;
+    margin-top: 17px;
+}
+#resultTable{
+    max-height: 69vh;
+}
+
 
 .table-header {
     position: fixed; /* 將表格標頭固定定位 */
@@ -102,7 +117,7 @@ th:hover{
 
 /* 按鈕樣式 */
 button:hover {
-    background-color: #0056b3;
+    filter: brightness(70%);
 }
 
 /* 滑鼠停在行上時 */
@@ -130,16 +145,16 @@ a {
 }
 
 a:visited {
-    color: #00d9ff;
+    color: #00c3ff;
 }
 
 a:hover {
     color: #f861df;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* 點擊行樣式 */
-#tr1:hover {
+.clickable-row:hover {
     cursor: pointer;
 }
 
@@ -196,20 +211,31 @@ th[data-sort].desc .sort-arrow {
     right: 120px;
     z-index: 1000;
 }
-#inquiry_record img {
+#cart{
+    position: absolute;
+    top: 15px;
+    right: 270px;
+    z-index: 1000;
+}
+.icon img{
     width: 30px;
     height: 30px;
     padding: 5px;
     transition: background-color 0.3s ease-in-out;
     vertical-align: middle; /* 新增的垂直對齊屬性 */
 }
-#inquiry_record:hover {
+#cart img{
+    width: 35px;
+    height: 35px;
+    padding: 0;
+}
+.icon:hover {
     filter: brightness(80%);
 }
-#inquiry_record:hover a{
+.icon:hover a{
     text-decoration: none; /* 移除 hover 時的底線 */
 }
-#inquiry_record a{
+.icon a{
     color: #dddcdc;
 }
 
@@ -227,4 +253,19 @@ th[data-sort].desc .sort-arrow {
 ::selection {
     background-color: rgb(221, 114, 51); /* 被選取文字背景色 */
     color: black; /* 被選取文字字體色 */
+}
+
+.cus_inq_button{
+    /* background-color: rgb(150, 151, 179); */
+    font-size: 16px;
+}
+
+.sticky-header th {
+    position: sticky;
+    top: 0;
+    z-index: 1; /* 将 z-index 设置为较高的值，确保在复选框之上 */
+}
+
+.table.scrolled {
+    padding-top: 3px;
 }

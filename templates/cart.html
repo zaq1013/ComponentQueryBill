@@ -5,46 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles2.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
-    <title>詢價確認</title>
+    <title>{{session['customer']}} 詢價明細確認</title>
 </head>
 <body>
-    <h1 style="margin-left: 5vw;margin-top: 3vh;">詢價明細確認</h1>
-    <div style="position: absolute;top: 50px;right: 50px;">
-    <button id="inquiry-button" >進行詢價</button>
+    <div id="inquiry-record" class="icon">
+        <a href="{{ url_for('search') }}">
+            <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
+             返回客戶機台列表
+        </a>
     </div>
-    <div style="position: absolute;top: 50px;right: 220px; ">
-    <button id="back-button" class="back-button">繼續新增</button>
-</div>
-    <div class="tables-container" style="margin-top: 5vh;">
+    <h1 style="margin-left: 5vw;margin-top: 6vh;">{{session['customer']}} 詢價確認</h1>
+    
+    <div style="position: absolute;top: 50px;right: 50px;">
+        <button id="inquiry-button"  class="cart-page-button">進行詢價</button>
+    </div>
+    <div style="position: absolute;top: 50px;right: 210px; ">
+        <button id="back-button"  class="cart-page-button">繼續新增</button>
+    </div>
+    <div style="position: absolute;top: 50px;right: 370px;">
+        <button id="cart-clear"  class="cart-page-button">清空購物車</button>
+    </div>
+    <div class="tables-container" style="margin-top: 3vh;">
         <div class="table" id = "confirmation_detail">
-            <table>
-                <tr>
-                    <th>父件/零件包</th>
+            <table style="margin-top: 17px;">
+                <tr class="sticky-header" id="table-header">
+                    <th style="border-top-left-radius: 8px;border-bottom-left-radius: 8px;">父件/零件包</th>
                     <th>機號</th>
                     <th>工單ID</th>
                     <th>可選材料</th>
                     <th>說明</th>
                     <th>組別</th>
                     <th>用量/單位數量</th>
-                    <th style="width: 10vw;">欲購數量</th>
+                    <th style="border-top-right-radius: 8px;border-bottom-right-radius: 8px;">欲購數量</th>
                 </tr>
                 {% for row in selected_data %}
-                {% if row.sbom_code == '' and row.sbom_material != '' %}
+                {% if row.type == '零件包內零件' %}
                 <tr class="empty-row">
                     <td style="font-size: 0px;">{{ row.sbom_par }}</td>
+                    <td style="font-size: 0px;">{{ row.sbom_code }}</td>
+                    <td style="font-size: 0px;">{{ row.sbom_lot }}</td>
                 {% else %}
                 <tr>
                     <td>{{ row.sbom_par }}</td>
-                {% endif %}
                     <td>{{ row.sbom_code }}</td>
                     <td>{{ row.sbom_lot }}</td>
+                {% endif %}
                     <td>{{ row.sbom_material }}</td>
                     <td>{{ row.sbom_desc }}</td>
                     <td>{{ row.sbom_group }}</td>
                     <td>{{ row.sbom_qty_per }}</td>
-                    {% if row.sbom_code != '' and row.sbom_material != '' %}
-                        <td><input type="number"  class="editable-quantity" value="{{ row.purchase_quantity }}"><button class="delete-row">删除</button></td>
-                    {% elif row.sbom_material == '' %}
+                    {% if row.type == '一般零件' %}
+                        <td><input type="number" name="normal_quantity" class="editable-quantity" value="{{ row.purchase_quantity }}"><button class="delete-row">删除</button></td>
+                    {% elif row.type == '零件包' %}
                         <td><input type="number" name="purchase_quantity" class="editable-quantity" id ="purchase_quantity_{{ row.sbom_par }}" value="{{ row.purchase_quantity }}"><button class="delete-row">删除</button></td>
                     {% else %}
                         <td name="part_quantity" id ="part_quantity_{{ row.sbom_par }}">{{ row.purchase_quantity }}</td>
@@ -60,6 +72,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ url_for('static', filename='script4.js') }}"></script>
+
 </html>
 
 

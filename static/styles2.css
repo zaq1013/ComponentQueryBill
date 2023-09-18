@@ -15,6 +15,7 @@ body {
     display: flex;
     justify-content: space-around;
     padding: 20px;
+    padding-top: 0;
 }
 .table-container {
     max-height: 400px; /* 设置容器的最大高度，启用滚动条 */
@@ -115,7 +116,7 @@ button:hover {
     border-radius: 5px;
     border: 0em;
     width: 5vw;
-    font-size: 15px;
+    font-size: 20px;
     margin-right: 1vw;
     margin-bottom: 5px;
 }
@@ -184,8 +185,8 @@ td.none-value {
 .qtyinput{
     border-radius: 5px;
     border: none;
-    height: 18px;
     width: 5vw;
+    font-size: 20px;
 }
 .partinput:focus{
     outline: none;
@@ -193,6 +194,7 @@ td.none-value {
 
 .partinput{
     background-color: #7c7c7c;
+    font-size:16px
 }
 
 .filter{
@@ -231,6 +233,7 @@ input[type="checkbox"]#filter-checkbox:checked ~ label {
     justify-content: space-around;
     padding: 20px;
     max-height: 80vh;
+    padding-top: 1px;
 }
 
 #det_qty{
@@ -261,6 +264,8 @@ tr:hover {
 
 #clear-filter-button{
     margin-left: 3px;
+    margin-top: 10px;
+    margin-bottom: 0;
     background-color: #495057;
 }
 
@@ -308,7 +313,7 @@ tr:hover {
     position: sticky;
 }
 
-#back-button, #inquiry-button{
+.cart-page-button{
     padding: 13px 20px;
     border: none;
     border-radius: 20px;
@@ -316,15 +321,22 @@ tr:hover {
     right: 219px;
     top: 11vh;
     font-size: 25px;
-    background-color: rgb(238, 126, 34);
     margin-left: 5vw;
     margin-right: 5vw;
 }
+
+.cart-page-button:hover{
+    filter: brightness(70%);
+}
+
 #back-button{
     background-color: #007bff;
 }
-#back-button:hover, #inquiry-button:hover{
-    filter: brightness(70%);
+#inquiry-button{
+    background-color: rgb(238, 126, 34);
+}
+#cart-clear{
+    background-color: #7c7c7c;
 }
 
 #inquiry_record{
@@ -349,4 +361,42 @@ tr:hover {
 #inquiry_record a{
     color: #dddcdc;
     text-decoration: none;
+}
+
+#cart{
+    position: absolute;
+    top: 15px;
+    right: 270px;
+    z-index: 1000;
+}
+#cart img{
+    width: 35px;
+    height: 35px;
+    padding: 0;
+}
+.icon img{
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    transition: background-color 0.3s ease-in-out;
+    vertical-align: middle; /* 新增的垂直對齊屬性 */
+}
+.icon:hover {
+    filter: brightness(80%);
+}
+.icon:hover a{
+    text-decoration: none; /* 移除 hover 時的底線 */
+}
+.icon a{
+    color: #dddcdc;
+    text-decoration: none;
+}
+
+#inquiry-record{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.table.scrolled {
+    padding-top: 0px;
 }

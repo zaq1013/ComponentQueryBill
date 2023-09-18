@@ -62,7 +62,7 @@ $(document).ready(function() {
         // 根據輸入框的值來設置勾選框的狀態
         checkbox.prop('checked', !isNaN(purchaseQuantity) && purchaseQuantity > 0);
 
-        // 獲取祖名，用於同步其他零件的輸入框
+        // 獲取組名，用於同步其他零件的輸入框
         var partGroupName = $(this).closest('tr').find('.qtyinput').attr('id');
         if (partGroupName){
             var partGroupName = $(this).closest('tr').find('.qtyinput').attr('id').split('_')[2]; // 获取组名
@@ -70,6 +70,9 @@ $(document).ready(function() {
             $('input[id^="part_quantity_' + partGroupName + '"]').each(function() {
                 // 獲取零件的單位數量
                 var qtyPer = parseFloat($(this).closest('tr').find('td:eq(7)').text());
+                if (isNaN(qtyPer)){
+                    qtyPer = 0;
+                }
                 if (!isNaN(purchaseQuantity) && !isNaN(qtyPer) && purchaseQuantity>0) {
                     $(this).val((purchaseQuantity * qtyPer).toFixed(2));
                     // 設置零件格勾選
@@ -101,6 +104,9 @@ $(document).ready(function() {
                 $('input[id^="part_quantity_' + partGroupName + '"]').each(function() {
                     // 獲取每個零件的數量
                     var qtyPer = parseFloat($(this).closest('tr').find('td:eq(7)').text());
+                    if (isNaN(qtyPer)){
+                        qtyPer = 0;
+                    }
                     $(this).val((purchaseQuantity * qtyPer).toFixed(2));
                     // 設置零件勾選
                     var partCheckbox = $(this).closest('tr').find('.purchase_checkbox');
@@ -160,7 +166,10 @@ $(document).ready(function() {
             };
             selectedRowsData.push(rowData);
         });
-    
+        if (selectedRowsData.length === 0) {
+            // 如果selected_data為空，不執行表單提交
+            return;
+        }
         // 將以勾選的數據轉換為JSON字串，並設置為隱藏表單內的值
         $('#selected_data').val(JSON.stringify(selectedRowsData));
     
@@ -186,6 +195,9 @@ $(document).ready(function() {
                 $('input[id^="part_quantity_' + partGroupName + '"]').each(function() {
                     // 獲取每個零件的數量
                     var qtyPer = parseFloat($(this).closest('tr').find('td:eq(7)').text());
+                    if (isNaN(qtyPer)){
+                        qtyPer = 0;
+                    }
                     $(this).val((purchaseQuantity * qtyPer).toFixed(2));
                     // 設置零件格勾選
                     var partCheckbox = $(this).closest('tr').find('.purchase_checkbox');

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    // 找到父件/零件包字段為哭的行並添加分類
+    // 找到父件/零件包字段為空的行並添加分類
     $('tr').each(function() {
         var sbom_par = $(this).find('td:eq(0)').text(); 
         if (sbom_par.trim() === '') {
@@ -56,7 +56,7 @@ $(document).ready(function() {
         let subItemNumber = 0;
         let currentItem = "一般零件"; // 預設為一般零件
         const machine_number = document.querySelector('#confirmation_detail table tr:not(.empty-row) td:nth-child(2)').textContent.trim();
-        // 遞迴
+        // 遞迴所有tr
         table.querySelectorAll('tr').forEach((row) => {
             const cells = row.querySelectorAll('td');
 

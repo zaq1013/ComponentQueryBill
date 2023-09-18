@@ -46,27 +46,32 @@
 table {
     width: 95vw;
     margin: 0 auto;
+    margin-bottom: 5vh;
     background-color: #343a40;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
+    border-radius: 10px;
     border-collapse: collapse;
 }
 th {
     background-color: #17191a;
 }
+tbody td{
+    border-bottom: none;
+    border-top: 1px solid #495057;
+}
 </style>
 <body>
-    <!-- <div id="top-bar">
+    <div id="top-bar">
         <div id="inquiry-record" style="padding-left: 2vw;padding-top: 10px;">
             <a href="{{ url_for('list_inquiries') }}">
                 <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
-                 上一頁
+                 返回詢價紀錄列表
             </a>
         </div>
-    </div> -->
-    <h1 style="padding-top: 3vh;padding-left: 2.3vw;">詳細詢價紀錄: {{inquiry_id}}</h1>
-    <div style="position: absolute;top: 35px;right: 10vw; font-size: 18px;">
+    </div>
+    <h1 style="padding-top: 7vh;padding-left: 2.3vw;">詳細詢價紀錄: {{inquiry_id}}</h1>
+    <div style="position: absolute;top: 35px;right: 10vw; font-size: 18px;line-height: 1.5;">
         {% for b in basic %}
             單號: {{b['單號']}} <br>
             代理: {{b['代理']}} ( {{b['代理名稱']}})<br> 
@@ -74,16 +79,16 @@ th {
             詢價日: {{b['詢價日']}}
         {% endfor %}
     </div>
-    <table style="margin-top: 8vh;">
-        <tr>
-            <th>項次</th>
+    <table style="margin-top: 5vh;">
+        <tr class="sticky-header" id="table-header">
+            <th style="border-top-left-radius: 10px;">項次</th>
             <th>機號</th>
             <th>項目</th>
             <th>零件</th>
             <th>機台用量/單位數量</th>
             <th>訂購量</th>
             <th>報價金額</th>
-            <th>類型</th>
+            <th style="border-top-right-radius: 10px;">類型</th>
         </tr>
         {% for detail in inquiry_details %}
             {% if detail['類型'] == '零件包內零件'%}
@@ -91,7 +96,11 @@ th {
             {% else %}
             <tr >
             {% endif %}
+                {% if detail['類型'] == '零件包內零件' %}
+                <td></td>
+                {% else %}
                 <td>{{ detail['項次'] }}</td>
+                {% endif %}
                 <td>{{detail['機號']}}</td>
                 {% if detail['類型'] == '零件包內零件'%}
                 <td></td>  <!-- 空白列 -->

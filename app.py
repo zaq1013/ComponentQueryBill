@@ -8,12 +8,12 @@ import logging
 
 app = Flask(__name__)
 
-app.secret_key = 'pl112004'  # 設定一個安全的密鑰，用於加密session
+app.secret_key = ''  # 設定一個安全的密鑰，用於加密session
 
-server = '77.0.0.151'
-database = 'plQuote_train'
-username = 'plis'
-password = 'spl_20765242'
+server = ''
+database = ''
+username = ''
+password = ''
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():

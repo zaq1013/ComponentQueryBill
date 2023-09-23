@@ -8,7 +8,7 @@
     <title>自動報價零件包查詢系統</title>
 </head>
 <body>
-    <div class="center">
+    <div class="center" style="padding-bottom: 40px;padding-top: 25px;">
         <h1>機台零件包及料號詳細: {{machine_number}}</h1>
         <!-- <form action="{{ url_for('component', machine_number=machine_number, keyword='') }}" method="post" class="search-form">
             <label for="machine_number">機號：</label>
@@ -42,16 +42,25 @@
     <div id="manual">
         <!-- <a href="{{ url_for('link', machine_number=machine_number, _external=True) }}" target="_blank"> -->
         <a href="{{ url_for('link',machine_number=machine_number) }}" target="_blank">
-            使用說明
+            操作手冊
             <img src="{{ url_for('static', filename='manual2.png') }}" alt="Home">
         </a>
     </div>
+    {% if session['sp_inq'] %}
+    <div id="home-link">
+        <a href="{{ url_for('special_search') }}">
+            <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="Home">
+            返回代理機台列表
+        </a>
+    </div>
+    {% else %}
     <div id="home-link">
         <a href="{{ url_for('search') }}">
             <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="Home">
             返回客戶機台列表
         </a>
     </div>
+    {% endif %}
     <div class="filter">
         <input type="checkbox" id="filter-checkbox">
         <label for="filter-checkbox" style="height: 50px;width: 50px;">
@@ -60,7 +69,18 @@
         </label>
     </div>
     <button id="checkout-button" >加入購物車</button>
-
+    <div style="position: absolute;top: 7vh;left: 7vw; font-size: 16px;line-height: 1.5;text-align: left;;">
+        代理: {{detail['代理']}} ( {{detail['代理名']}})<br> 
+        {% if session['sp_inq'] %}
+        原客戶: {{detail['客戶ID']}} ( {{detail['客戶名']}} ) <br>
+        {% else %}
+        客戶: {{detail['客戶ID']}} ( {{detail['客戶名']}} ) <br>
+        {% endif %}
+        訂單號碼: {{detail['訂單號碼']}} <br> 
+        料號: {{detail['機台料號']}}  <br>
+        規格: {{detail['說明一']}}<br>
+        工單ID: {{detail['工單ID']}}
+    </div>
     <div class="tables-container">
         <div class="table" id="bomdiv">
             <h2>材料表</h2> 
@@ -72,7 +92,7 @@
                     <th style="border-top-left-radius: 8px;border-bottom-left-radius: 8px;">購買</th>
                     <th>父件/零件包</th>
                     <th>機號</th>
-                    <th>工單ID</th>
+                    <th hidden>工單ID</th>
                     <th>可選材料</th>
                     <th>說明</th>
                     <th>組別</th>
@@ -84,9 +104,16 @@
                     <td><input type="checkbox" name="purchase_checkbox" class="purchase_checkbox"></td>
                     <td>{{ row.sbom_par }}</td>
                     <td>{{ row.sbom_code }}</td>
-                    <td>{{ row.sbom_lot }}</td>
+                    <td hidden>{{ row.sbom_lot }}</td>
                     <td >{{ row.sbom_comp }}</td>
-                    <td>{{ row.sbom_desc }}</td>
+                    
+                    <td>
+                        {% if row.sbom_desc1 %}{{ row.sbom_desc1 }}{% endif %}
+                        {% if row.sbom_desc2 %} ; {{ row.sbom_desc2 }}{% endif %}
+                        {% if row.sbom_desc3 %}<br>  {{ row.sbom_desc3 }}{% endif %}
+                        {% if row.sbom_desc4 %} ; {{ row.sbom_desc4 }}{% endif %}
+                    </td>
+
                     <td>{{ row.sbom_group }}</td>
                     <td>{{ row.sbom_qty_per }}</td>
                     <td><input type="number" name="purchase_quantity" value="" class = "pur_num"></td>
@@ -98,7 +125,7 @@
                     <td><input type="checkbox" name="purchase_checkbox" class="purchase_checkbox"></td>
                     <td>{{ part_group }}</td>
                     <td>{{ parts[0].sbom_code}}</td>
-                    <td>{{ parts[0].sbom_lot}}</td>
+                    <td hidden>{{ parts[0].sbom_lot}}</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -111,12 +138,21 @@
                     <td><input type="checkbox" name="purchase_checkbox" class="purchase_checkbox" disabled></td>
                     <td style="color: #495057; font-size: 0px;">{{ part_group }}</td>
                     <td></td>
-                    <td></td>
+                    <td hidden></td>
                     <td>{{ part.sbom_comp }}</td>
-                    <td>{{ part.sbom_desc }}</td>
+                    <td>{% if part.sbom_desc1 %}{{ part.sbom_desc1 }}{% endif %}
+                        {% if part.sbom_desc2 %}; {{ part.sbom_desc2 }} {% endif %}
+                        {% if part.sbom_desc3 %}<br>  {{ part.sbom_desc3 }} {% endif %}
+                        {% if part.sbom_desc4 %}; {{ part.sbom_desc4 }}{% endif %}
+                    </td>
                     <td>{{ part.sbom_group }}</td>
                     <td>{{ part.sbom_qty_per }}</td>
-                    <td><input type="number" name="part_quantity" readonly id ="part_quantity_{{ part_group }}" class="qtyinput partinput" ></td>
+                    <td>
+                        <div class="input-container">
+                            <input type="number" name="part_quantity" readonly id="part_quantity_{{ part_group }}" class="qtyinput partinput">
+                            <span class="tooltip">無法單獨輸入零件數量</span>
+                        </div>
+                    </td>
                 </tr>
                 {% endfor %}
                 {% endfor %}
@@ -127,6 +163,14 @@
         </div>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="\static\code.jquery.com_jquery-3.7.1.min.js"></script>
 <script src="{{ url_for('static', filename='script2.js') }}"></script>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <script>
+        alert("{{ messages[0] }}");
+    </script>
+{% endif %}
+{% endwith %}
 </html>

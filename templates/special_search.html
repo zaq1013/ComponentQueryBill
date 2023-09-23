@@ -36,7 +36,7 @@
         </a>
     </div>
     <div class="center">
-        <h1 style="margin-top: 15px;">客戶機台列表: {{ session['customer']}}</h1>
+        <h1 style="margin-top: 15px;">代理機台列表: {{ session['agent_code']}}</h1>
         <form action="/search" method="post" class="search-form">
                 <label for="customer_id" hidden>客戶ID：</label>
                 <!-- <input type="text" id="customer_id" name="customer_id" value="{{ request.form['customer_id'] }}" hidden> -->
@@ -56,7 +56,6 @@
         {% if query_results %}
         <div style="position: absolute;top: 8vh;left: 5vw; font-size: 18px;line-height: 1.5;text-align: left;;">
                 代理: {{query_results[0]['代理']}} ( {{query_results[0]['代理名']}})<br> 
-                客戶: {{query_results[0]['客戶ID']}} ( {{query_results[0]['客戶名']}} ) <br>
         </div>
         {% endif %}
         <div class="tables-container">
@@ -66,6 +65,8 @@
                     <thead>
                         <tr class="sticky-header" id="table-header">
                             <th data-sort="訂單號碼" style="border-top-left-radius: 8px;border-bottom-left-radius: 8px;">訂單號碼 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="客戶ID">客戶ID <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="客戶名">客戶名 <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="機號">機號 <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="機台料號">機台料號 <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="說明一">說明一 <span class="sort-arrow">&#9660;</span></th>
@@ -82,6 +83,8 @@
                         {% if row.機號 %}
                         <tr id="tr1" class="clickable-row" data-href="{{ url_for('component', machine_number=row.機號) }}">
                             <td data-column="訂單號碼">{{ row.訂單號碼 }}</td>
+                            <td data-column="客戶ID">{{ row.客戶ID }}</td>
+                            <td data-column="客戶名">{{ row.客戶名 }}</td>
                             <td data-column="機號">
                                 <a href="{{ url_for('component', machine_number=row.機號) }}" target="_blank" rel="noopener noreferrer">{{ row.機號 }}</a>
                             </td>
@@ -105,11 +108,5 @@
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="\static\code.jquery.com_jquery-3.7.1.min.js"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <script>
-        alert("{{ messages[0] }}");
-    </script>
-{% endif %}
-{% endwith %}
+
 </html>

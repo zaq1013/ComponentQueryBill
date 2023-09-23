@@ -44,10 +44,7 @@ $(document).ready(function() {
         updateCart(getCartData());
     });
 
-    document.getElementById("back-button").addEventListener("click", function() {
-        // 使用 JavaScript 导航到 /search 页面
-        window.location.href = "/search";
-    });
+    
     
     // 進行詢價按鈕
     $('#inquiry-button').on('click', function() {
@@ -56,7 +53,8 @@ $(document).ready(function() {
 
         // 創建新表格的數據
         const newTableData = [];
-
+        const note = document.querySelector('#note').value;
+        console.log(note)
         // 定義項次初始值
         let itemNumber = 0;
         let subItemNumber = 0;
@@ -125,6 +123,7 @@ $(document).ready(function() {
 
         const requestData = {
             data: newTableData,
+            note: note
             // machine_number: machine_number
         };
 
@@ -153,7 +152,7 @@ $(document).ready(function() {
 });
 
 document.getElementById("cart-clear").addEventListener("click", function() {
-    // 发送一个请求到服务器以清空购物车
+    // 發送請求至flask端清空購物車
     fetch('/clear_cart', {
         method: 'POST',
         headers: {
@@ -162,8 +161,8 @@ document.getElementById("cart-clear").addEventListener("click", function() {
     })
     .then(function(response) {
         if (response.ok) {
-            // 清除成功后，刷新页面或者重定向到购物车页面
-            window.location.reload(); // 刷新页面
+            // 清除成功後，刷新購物車頁面
+            window.location.reload(); 
         } else {
             console.error('清空失敗');
         }
@@ -203,7 +202,7 @@ function getCartData() {
             cartItem.sbom_code = columns[1].textContent.trim();
             cartItem.sbom_lot = columns[2].textContent.trim();
             cartItem.sbom_material = columns[3].textContent.trim();
-            cartItem.sbom_desc = columns[4].textContent.trim();
+            cartItem.sbom_desc = columns[4].innerHTML.replace(/\n/g, '').trim();
             cartItem.sbom_group = columns[5].textContent.trim();
             cartItem.sbom_qty_per = columns[6].textContent.trim();
             

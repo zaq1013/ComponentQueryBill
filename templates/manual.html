@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/png">
+    <title>{{machine_number}}使用手冊</title>
+    <style>
+        /* 直接將 CSS 樣式寫在這裡 */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .login-content {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>  
+</head>
+<body>
+    <div class="center">
+        <div class="login-container">
+            <div class="login-content" style="margin-top: 5vh">
+                <h2>請在瀏覽器輸入以下路徑:</h2>
+                <h2 ><span id="manual-path">{{manual_path}}</span><button style="margin-left: 5px;background-color: #495057;" onclick="copyToClipboard()">複製</button></h2>
+            </div>
+        </div>
+        
+    </div>
+    
+</body>
+<script>
+    function copyToClipboard() {
+        var manualPathElement = document.getElementById('manual-path');
+        var range = document.createRange();
+        range.selectNode(manualPathElement);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        alert('已複製到剪貼簿：' + manualPathElement.textContent);
+    }   
+</script>
+</html>

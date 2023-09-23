@@ -16,8 +16,16 @@ $(document).ready(function() {
     toggleTable('#toggleButton2', '#partTable', 'bomdiv2');
 
     // 點擊搜尋按鈕提交表單
-    $('#searchButton').click(function() {
-        $('#searchForm').submit();
+    // $('#searchButton').click(function() {
+    //     $('#searchForm').submit();
+    // });
+
+    // 監聽輸入框的按鍵事件
+    $('#keyword').on('keydown', function(event) {
+        // 檢查按下的按鍵是否為Enter 
+        if (event.which === 13 || event.keyCode === 13) {
+            searchTable();
+        }
     });
 
     // 處理匯出 CSV 按鈕點擊事件
@@ -67,7 +75,7 @@ $(document).ready(function() {
         if (partGroupName){
             var partGroupName = $(this).closest('tr').find('.qtyinput').attr('id').split('_')[2]; // 获取组名
             // 找到所有同一組的零件的行並更新輸入框內的值和勾選狀態
-            $('input[id^="part_quantity_' + partGroupName + '"]').each(function() {
+            $('input[id="part_quantity_' + partGroupName + '"]').each(function() {
                 // 獲取零件的單位數量
                 var qtyPer = parseFloat($(this).closest('tr').find('td:eq(7)').text());
                 if (isNaN(qtyPer)){
@@ -101,7 +109,7 @@ $(document).ready(function() {
             if (partGroupName){
                 var partGroupName = quantityInput.closest('tr').find('.qtyinput').attr('id').split('_')[2]; // 获取组名
                 // 找到所有同一組的零件的輸入框並更新值和勾選狀態
-                $('input[id^="part_quantity_' + partGroupName + '"]').each(function() {
+                $('input[id="part_quantity_' + partGroupName + '"]').each(function() {
                     // 獲取每個零件的數量
                     var qtyPer = parseFloat($(this).closest('tr').find('td:eq(7)').text());
                     if (isNaN(qtyPer)){
@@ -159,7 +167,7 @@ $(document).ready(function() {
                 sbom_code: $(this).find('td:eq(2)').text(),
                 sbom_lot: $(this).find('td:eq(3)').text(),
                 sbom_material: $(this).find('td:eq(4)').text(),
-                sbom_desc: $(this).find('td:eq(5)').text(),
+                sbom_desc: $(this).find('td:eq(5)').html().replace(/\n/g, ''),
                 sbom_group: $(this).find('td:eq(6)').text(),
                 sbom_qty_per: $(this).find('td:eq(7)').text(),
                 purchase_quantity: $(this).find('td:eq(8)').find('input').val(),
@@ -168,6 +176,7 @@ $(document).ready(function() {
         });
         if (selectedRowsData.length === 0) {
             // 如果selected_data為空，不執行表單提交
+            alert("未勾選資料，請勾選後再送出");
             return;
         }
         // 將以勾選的數據轉換為JSON字串，並設置為隱藏表單內的值
@@ -177,44 +186,44 @@ $(document).ready(function() {
         $('#confirmation_form').submit();
     });
     
-    // 恢復零件包內零件的輸入值
-    function restoreSubPartsInputValues() {
-        $('input[name="purchase_checkbox"]').each(function() {
-            if ($(this).is(':checked')) {
-                $(this).prop('checked', false);
-                $(this).prop('checked', true);
-            var quantityInput = $(this).closest('tr').find('input[name="purchase_quantity"]');
-            if (quantityInput.val().trim() === '') {
-                quantityInput.val('1');
-            }
-            var purchaseQuantity = parseFloat(quantityInput.val())
-            var partGroupName = quantityInput.closest('tr').find('.qtyinput').attr('id');
-            if (partGroupName){
-                var partGroupName = quantityInput.closest('tr').find('.qtyinput').attr('id').split('_')[2]; // 獲取組名
-                // 找到所有同一組的零件的輸入框並更新值和勾選狀態
-                $('input[id^="part_quantity_' + partGroupName + '"]').each(function() {
-                    // 獲取每個零件的數量
-                    var qtyPer = parseFloat($(this).closest('tr').find('td:eq(7)').text());
-                    if (isNaN(qtyPer)){
-                        qtyPer = 0;
-                    }
-                    $(this).val((purchaseQuantity * qtyPer).toFixed(2));
-                    // 設置零件格勾選
-                    var partCheckbox = $(this).closest('tr').find('.purchase_checkbox');
-                    partCheckbox.prop('checked', true);
+    // // 恢復零件包內零件的輸入值
+    // function restoreSubPartsInputValues() {
+    //     $('input[name="purchase_checkbox"]').each(function() {
+    //         if ($(this).is(':checked')) {
+    //             $(this).prop('checked', false);
+    //             $(this).prop('checked', true);
+    //         var quantityInput = $(this).closest('tr').find('input[name="purchase_quantity"]');
+    //         if (quantityInput.val().trim() === '') {
+    //             quantityInput.val('1');
+    //         }
+    //         var purchaseQuantity = parseFloat(quantityInput.val())
+    //         var partGroupName = quantityInput.closest('tr').find('.qtyinput').attr('id');
+    //         if (partGroupName){
+    //             var partGroupName = quantityInput.closest('tr').find('.qtyinput').attr('id').split('_')[2]; // 獲取組名
+    //             // 找到所有同一組的零件的輸入框並更新值和勾選狀態
+    //             $('input[id^="part_quantity_' + partGroupName + '"]').each(function() {
+    //                 // 獲取每個零件的數量
+    //                 var qtyPer = parseFloat($(this).closest('tr').find('td:eq(7)').text());
+    //                 if (isNaN(qtyPer)){
+    //                     qtyPer = 0;
+    //                 }
+    //                 $(this).val((purchaseQuantity * qtyPer).toFixed(2));
+    //                 // 設置零件格勾選
+    //                 var partCheckbox = $(this).closest('tr').find('.purchase_checkbox');
+    //                 partCheckbox.prop('checked', true);
                     
-                });
-            }
-            }
-        });
-    }
+    //             });
+    //         }
+    //         }
+    //     });
+    // }
 
-    // 頁面載入時恢復零件包內零件的輸入值
-    restoreSubPartsInputValues();
+    // // 頁面載入時恢復零件包內零件的輸入值
+    // restoreSubPartsInputValues();
     
     
 });
-20
+
 function openManual(machine_number) {
     // 使用AJAX向後端發送請求以獲取machine_file_name
     var xhr = new XMLHttpRequest();
@@ -237,22 +246,22 @@ function searchTable() {
     var keyword = document.getElementById('keyword').value.toLowerCase();
     var rows = document.querySelectorAll('#bomTable tr');
 
-    var parentToDisplay = new Set(); // 用于存储要显示的父件/零件包字段
+    var parentToDisplay = new Set(); // 存放記錄下需要顯示的零件包
 
-    // 第一次循环：筛选出包含关键字的行并记录零件包内零件行的父件
+    // 第一次迴圈: 篩選出包含關鍵字的資料行，若該行為零件包內零件就記錄下他的父件(即其所屬的零件包)
     rows.forEach(function (row, index) {
         var text = row.innerText.toLowerCase();
         var shouldShow = text.includes(keyword) || keyword === '';
 
         if (index === 0) {
-            row.style.display = 'table-row'; // 保持表格头部始终显示
+            row.style.display = 'table-row'; // th(標頭)始終保持顯示
         } else {
-            var tdMachine = row.querySelector('td:nth-child(3)'); // 机号列
-            var tdParent = row.querySelector('td:nth-child(2)'); // 父件/零件包列
+            var tdMachine = row.querySelector('td:nth-child(3)'); // 機號欄位
+            var tdParent = row.querySelector('td:nth-child(2)'); // 父件/零件包欄位
             var parentText = tdParent ? tdParent.textContent.trim() : '';
 
             if (tdMachine && tdMachine.textContent.trim() === '') {
-                // 处理零件包内零件
+                // 零件包內零件
                 if (shouldShow) {
                     parentToDisplay.add(parentText);
                     row.style.display = 'table-row';
@@ -260,13 +269,13 @@ function searchTable() {
                     row.style.display = 'none';
                 }
             } else {
-                // 处理其他行
+                // 其他欄位直接設定成不顯示就好
                 row.style.display = shouldShow ? 'table-row' : 'none';
             }
         }
     });
 
-    // 第二次循环：显示与记录下来的父件相同的行
+    // 第二次迴圈: 找出與上面找到的零件包內零件屬於同一個父件的整個零件包
     rows.forEach(function (row, index) {
         if (index > 0) {
             var tdParent = row.querySelector('td:nth-child(2)'); // 父件/零件包列

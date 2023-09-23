@@ -36,7 +36,7 @@
                 <input type="text" id="customer_name" name="customer_name" value="{{ request.form['customer_name'] }}">
             </div>
             <div class="search-button">
-                <button type="submit">搜尋</button>
+                <button type="submit" style="font-size: 16px;">搜尋</button>
             </div>
         </form>
         <div class="tables-container">
@@ -49,7 +49,7 @@
                             <th data-sort="代理名">代理名稱 </th>
                             <th data-sort="客戶ID">客戶ID <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="客戶名">客戶名稱 <span class="sort-arrow">&#9660;</span></th>
-                            <th data-sort="訂單數">訂單數 <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="訂單數">出貨台數 <span class="sort-arrow">&#9660;</span></th>
                             <th data-sort="詢價" style="text-align: center; border-top-right-radius: 8px;border-bottom-right-radius: 8px;">進行此客戶之詢價</th>
                         </tr>
                     </thead>
@@ -61,6 +61,7 @@
                             <td data-column="客戶ID">{{ row.客戶ID }}</td>
                             <td data-column="客戶名">{{ row.客戶名 }}</td>
                             <td data-column="訂單數">{{ row.訂單數 }}</td>
+                            {% if row.訂單數 > 0 %}
                             <td>
                                 <form action="{{ url_for('search') }}" method="post" class="hidden-form" >
                                     <input type="hidden" name="customer_id" value="{{ row.客戶ID }}">
@@ -69,15 +70,29 @@
                                     <button type="submit" class="cus_inq_button">詢價</button>
                                 </form>
                             </td>
+                            {% else %}
+                            <td style="height: 37px;"></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            
         </div>
+            {% if query_results|length == 0 %}
+            <div class="sp" style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
+                <h2 >找不到客戶資料，是否以代理身分下單?</h2>
+                <div style="display: flex; justify-content: center; margin-top: 10px;">
+                    <button id="yes-button" style="margin-right: 10px;background-color: rgb(238, 126, 34);font-size: 16px;padding: 10px 20px 10px 20px">是</button>
+                    <button id="no-button" style="font-size: 16px;padding: 10px 20px 10px 20px">否</button>
+                </div>
+            </div>        
+            {% endif %}
         {% endif %}
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="\static\code.jquery.com_jquery-3.7.1.min.js"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -86,4 +101,17 @@
     </script>
 {% endif %}
 {% endwith %}
+{% if query_results|length == 0 %}
+<script>
+document.getElementById("yes-button").addEventListener("click", function() {
+    // 路徑導至代理身分下單的搜尋介面
+    window.location.href = "/special_search";
+});
+
+document.getElementById("no-button").addEventListener("click", function() {
+    // 清空篩選條件後刷新頁面
+    window.location.href = "/search_customer";
+});
+</script>
+{% endif %}
 </html>

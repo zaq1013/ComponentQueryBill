@@ -94,30 +94,50 @@ tbody td{
 .hidden-font {
     font-size: 0;
 }
-
+th:hover{
+    cursor:auto;
+}
 </style>
 <body>
     <div id="top-bar">
         {% if session['customer'] is not none %}
-        <div id="inquiry-record">
-            <a href="{{ url_for('search') }}" class="normal-font">
-                <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
-                 <span>返回機台列表</span>
-            </a>
-        </div>
-        {% endif %}
+
+            {% if session['sp_inq'] %}
+            <div id="inquiry-record">
+                <a href="{{ url_for('special_search') }}" class="normal-font">
+                    <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
+                    <span>返回機台列表</span>
+                </a>
+            </div>
+            {% else %}
+            <div id="inquiry-record">
+                <a href="{{ url_for('search') }}" class="normal-font">
+                    <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
+                    <span>返回機台列表</span>
+                </a>
+            </div>
+            {% endif %}
         <div id="home-link" style="left: 4px;top: 45px;">
             <a href="{{ url_for('search_customer') }}" class="normal-font">
                 <img src="{{ url_for('static', filename='home-icon.png') }}" alt="Home" style="margin-right: 5px;">
                 <span>返回客戶列表</span>
             </a>
         </div>
+        {% else %}
+        <div id="home-link" style="left: 4px;top: 10px;">
+            <a href="{{ url_for('search_customer') }}" class="normal-font">
+                <img src="{{ url_for('static', filename='home-icon.png') }}" alt="Home" style="margin-right: 5px;">
+                <span>返回客戶列表</span>
+            </a>
+        </div>
+        {% endif %}
+        
         <div class="user-info">
             <p>代理：{{ session['agent_code'] }}</p>
         </div>
     </div>
     <div class="header">
-        <h1>{{ session['agent_code'] }} 詢價紀錄列表</h1>
+        <h1 style="margin-bottom: 60px;">代理 {{ session['agent_code'] }} 詢價紀錄列表</h1>
     </div>
     <div class="tables-container">
         <table>
@@ -128,7 +148,8 @@ tbody td{
                 <th>客戶</th>
                 <th>客戶名稱</th>
                 <th>詢價日</th>
-                <th style="border-top-right-radius: 8px">狀態</th>
+                <th>狀態</th>
+                <th style="border-top-right-radius: 8px">備註</th>
             </tr>
             {% for inquiry in inquiries %}
                 <tr class="clickable-row" data-href="{{ url_for('view_inquiry', inquiry_id=inquiry['單號']) }}">
@@ -147,12 +168,18 @@ tbody td{
                     {% else %}
                     <td>{{ inquiry['狀態'] }}</td>
                     {% endif %}
+                    {% if inquiry['備註'] == none %}
+                    <td></td>
+                    {% else %}
+                    <td>{{ inquiry['備註'] }}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="\static\code.jquery.com_jquery-3.7.1.min.js"></script>
 <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> -->
 <script>
 $(document).ready(function() {
@@ -173,8 +200,13 @@ $(window).scroll(function () {
 {% with messages = get_flashed_messages() %}
 {% if messages %}
     <script>
-        alert("{{ message[0] }}");
+        alert("{{ messages[0] }}");
     </script>
 {% endif %}
 {% endwith %}
+<!-- {% if message %}
+    <script>
+        alert("{{ message }}");
+    </script>
+{% endif %} -->
 </html>

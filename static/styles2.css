@@ -167,7 +167,7 @@ button:hover {
 
 #manual {
     position: absolute;
-    top: 100px;
+    top: 11.5vh;
     right: 100px;
     z-index: 1000;
 }
@@ -199,7 +199,7 @@ td.none-value {
 
 .filter{
     position: absolute;
-    top: 138px;
+    top: 15.5vh;
     right: 100px;
     flex-direction: column;
 }
@@ -293,7 +293,7 @@ tr:hover {
     border-radius: 20px;
     cursor: pointer;
     right: 219px;
-    top: 11vh;
+    top: 12vh;
     font-size: 25px;
     background-color: rgb(238, 126, 34);
 }
@@ -321,8 +321,7 @@ tr:hover {
     right: 219px;
     top: 11vh;
     font-size: 25px;
-    margin-left: 5vw;
-    margin-right: 5vw;
+    margin-left: 1vw;
 }
 
 .cart-page-button:hover{
@@ -399,4 +398,25 @@ tr:hover {
 }
 .table.scrolled {
     padding-top: 0px;
+}
+
+.tooltip {
+    display: none;
+    background-color: #f44336ab; /* 紅色背景 */
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    top: -4px;
+    left: -5px; /* 將提示移動到右邊 */
+    white-space: nowrap; /* 避免文字換行 */
+    font-size: 14px;
+}
+
+.input-container {
+    position: relative; /* 將容器設置為相對定位 */
+}
+
+.input-container:hover  .tooltip {
+    display: block;
 }

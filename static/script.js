@@ -56,3 +56,4 @@ function compareCells(column, sortDirection) {
         return sortDirection === 'asc' ? result : -result;
     };
 }
+

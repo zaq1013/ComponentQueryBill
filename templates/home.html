@@ -17,7 +17,7 @@
             align-items: center;
         }
         .login-container {
-            margin: 15vw;
+            margin: 18vw;
             margin-top: 15vh;
             width: 40vw;
             text-align: center;
@@ -50,8 +50,12 @@
 <body>
     <div class="login-container">
         <div class="login-content">
-            <a href="{{ url_for('login') }}"  rel="noopener noreferrer" style="margin-right: 5vw;">報價下單測試</a>
-            <a href="http://77.0.1.89:8011/"  rel="noopener noreferrer" style="margin-left: 5vw;">零件包模擬</a>
+            <div style="display:inline-block; margin-right: 100px;">
+            <a href="{{ url_for('login') }}"  rel="noopener noreferrer" >報價下單測試</a>
+            </div>
+            <div style="display: inline-block;">
+            <a href="http://77.0.1.89:8011/"  rel="noopener noreferrer" >零件包模擬</a>
+            </div>
         </div>
     </div>
 </body>

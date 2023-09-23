@@ -9,21 +9,28 @@
 </head>
 <body>
     <div id="inquiry-record" class="icon">
+        {% if session['sp_inq'] %}
+        <a href="{{ url_for('special_search') }}">
+            <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
+             返回代理機台列表
+        </a>
+        {% else %}
         <a href="{{ url_for('search') }}">
             <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
              返回客戶機台列表
         </a>
+        {% endif %}
     </div>
-    <h1 style="margin-left: 5vw;margin-top: 6vh;">{{session['customer']}} 詢價確認</h1>
-    
-    <div style="position: absolute;top: 50px;right: 50px;">
-        <button id="inquiry-button"  class="cart-page-button">進行詢價</button>
-    </div>
-    <div style="position: absolute;top: 50px;right: 210px; ">
-        <button id="back-button"  class="cart-page-button">繼續新增</button>
-    </div>
-    <div style="position: absolute;top: 50px;right: 370px;">
+    {% if session['sp_inq'] %}
+    <h1 style="margin-left: 5vw;margin-top: 6vh;">代理 {{session['agent_code']}} 詢價確認</h1>
+    {% else %}
+    <h1 style="margin-left: 5vw;margin-top: 6vh;">客戶 {{session['customer']}} 詢價確認</h1>
+    {% endif %}
+    <div style="position: absolute;top: 5vh;right: 100px;">
+        <span style="font-size: 18px;">備註: </span><input type="text" id="note" style="font-size: 16px;border-radius: 5px;border: none;padding: 5px;">
         <button id="cart-clear"  class="cart-page-button">清空購物車</button>
+        <button id="back-button"  class="cart-page-button">繼續新增</button>
+        <button id="inquiry-button"  class="cart-page-button">進行詢價</button>
     </div>
     <div class="tables-container" style="margin-top: 3vh;">
         <div class="table" id = "confirmation_detail">
@@ -51,7 +58,13 @@
                     <td>{{ row.sbom_lot }}</td>
                 {% endif %}
                     <td>{{ row.sbom_material }}</td>
-                    <td>{{ row.sbom_desc }}</td>
+                    <td>
+                        
+                        {{ row.sbom_desc[0] }}
+                        {% if row.sbom_desc|length > 1 %}
+                        <br>{{ row.sbom_desc[1] }}
+                        {% endif %}
+                    </td>
                     <td>{{ row.sbom_group }}</td>
                     <td>{{ row.sbom_qty_per }}</td>
                     {% if row.type == '一般零件' %}
@@ -70,8 +83,24 @@
 
 </body>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="\static\code.jquery.com_jquery-3.7.1.min.js"></script>
 <script src="{{ url_for('static', filename='script4.js') }}"></script>
+{% if session['sp_inq'] %}
+<script>
+document.getElementById("back-button").addEventListener("click", function() {
+        // 使用 JavaScript 导航到 /search 页面
+        window.location.href = "/special_search";
+    });
+</script>
+{% else %}
+<script>
+    document.getElementById("back-button").addEventListener("click", function() {
+            // 使用 JavaScript 导航到 /search 页面
+            window.location.href = "/search";
+        });
+</script>
+{% endif %}
 
 </html>
 

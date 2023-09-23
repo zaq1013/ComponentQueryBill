@@ -12,11 +12,10 @@
     justify-content: space-between;
     padding: 10px;
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0px;
+    left: 0px;
     right: 0;
     z-index: 1000;
-    
 }
 #home-link a,
 #inquiry-record a {
@@ -60,23 +59,42 @@ tbody td{
     border-bottom: none;
     border-top: 1px solid #495057;
 }
+.normal-font {
+    font-size: 16px;
+}
+.hidden-font {
+    font-size: 0;
+}
+#home-link:hover a:not(.normal-font) span{
+    text-decoration: none;
+    font-size: 16px!important;
+    background-color: #212529;
+    filter: brightness(100%);
+    padding: 5px 5px 5px 0;
+    border-radius: 5px;
+}
 </style>
 <body>
     <div id="top-bar">
-        <div id="inquiry-record" style="padding-left: 2vw;padding-top: 10px;">
-            <a href="{{ url_for('list_inquiries') }}">
-                <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="previous">
-                 返回詢價紀錄列表
+        <div id="home-link" style="left: 15px;top: 15px;">
+            <a href="{{ url_for('list_inquiries') }}" class="normal-font">
+                <img src="{{ url_for('static', filename='previous-icon1.png') }}" alt="Home" style="margin-right: 5px;">
+                <span>返回詢價紀錄列表</span>
             </a>
         </div>
     </div>
-    <h1 style="padding-top: 7vh;padding-left: 2.3vw;">詳細詢價紀錄: {{inquiry_id}}</h1>
-    <div style="position: absolute;top: 35px;right: 10vw; font-size: 18px;line-height: 1.5;">
+    <h1 style="display: flex;justify-content: center;padding: 6vh;">詳細詢價紀錄: {{inquiry_id}}</h1>
+    <div style="position: absolute;top: 7vh;left: 5vw; font-size: 18px;line-height: 1.5;">
         {% for b in basic %}
             單號: {{b['單號']}} <br>
             代理: {{b['代理']}} ( {{b['代理名稱']}})<br> 
             客戶: {{b['客戶ID']}} ( {{b['客戶名稱']}} ) <br>
-            詢價日: {{b['詢價日']}}
+            詢價日: {{b['詢價日']}} <br>
+            {% if b['備註'] is none %}
+            備註: 
+            {% else %}
+            備註: {{b['備註']}}
+            {% endif %}
         {% endfor %}
     </div>
     <table style="margin-top: 5vh;">
@@ -121,4 +139,22 @@ tbody td{
         {% endfor %}
     </table>
 </body>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="\static\code.jquery.com_jquery-3.7.1.min.js"></script>
+<script>
+    $(window).scroll(function () {
+        var scrollTop = $(this).scrollTop();
+        if (scrollTop > 50) {
+            $('#home-link a').removeClass('normal-font').addClass('hidden-font');
+            $('#home-link').css({
+                'left': '0',
+            });
+        } else {
+            $('#home-link a').removeClass('hidden-font').addClass('normal-font');
+            $('#home-link').css({
+                'left': '15px'
+            });
+        }
+    });
+    </script>
 </html>
